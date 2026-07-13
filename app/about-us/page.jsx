@@ -1,0 +1,53 @@
+import { resolveCanonical, getCanonicalUrl } from "../lib/getCanonicalUrl";
+
+export async function generateMetadata() {
+  try {
+    const res = await fetch(
+      "https://ecommerce-inventory.thegallerygen.com/api/page/detail/8",
+      { next: { revalidate: 3600 } }
+    );
+
+    if (!res.ok) throw new Error(`API error: ${res.status}`);
+
+    const data = await res.json();
+    const canonical =
+      resolveCanonical(data?.data?.canonical_url, "/about-us/") ?? undefined;
+
+    return {
+      title: data?.data?.meta_title || "About Us",
+      description: data?.data?.meta_description || "About Us page",
+      ...(data?.data?.focus_keyword ? { keywords: data.data.focus_keyword } : {}),
+      alternates: canonical ? { canonical } : undefined,
+      robots: {
+        index: data?.data?.robots_index !== "noindex",
+        follow: data?.data?.robots_follow !== "nofollow",
+        googleBot: {
+          index: data?.data?.robots_index !== "noindex",
+          follow: data?.data?.robots_follow !== "nofollow",
+        },
+      },
+    };
+  } catch (error) {
+    console.error("About Us metadata fetch failed:", error);
+    return {
+      title: "About Us",
+      description: "About Us page",
+      alternates: { canonical: getCanonicalUrl("/about-us/") ?? undefined },
+      robots: { index: true, follow: true },
+    };
+  }
+}
+
+
+import { Suspense } from "react";
+import About from "../src/Pages/AboutUs";
+
+export const revalidate = 3600;
+
+export default function Page() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <About />
+    </Suspense>
+  );
+}

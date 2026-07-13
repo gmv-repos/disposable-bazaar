@@ -1,0 +1,338 @@
+"use client";
+import React, { useEffect, useState } from 'react'
+import Image from 'next/image';
+import CustomHeroSection from '../components/CustomHeroSection'
+import { CiSearch } from 'react-icons/ci';
+import { Assets_Url, Image_Url } from '../const';
+import axios from '../Utils/axios';
+import Link from 'next/link';
+import { RiFilter3Line } from 'react-icons/ri';
+import { RxCross2 } from 'react-icons/rx';
+import { Loader } from '../components/Loader';
+import { GrNext, GrPrevious } from "react-icons/gr";
+import ErrorPage from './ErrorPage';
+import { useParams, useRouter } from 'next/navigation';
+
+function Blog({ initialBlogs = [], initialCategories = [], initialTotalPages = 1 }) {
+    const params = useParams();
+    const router = useRouter();
+    // /blog/page/[page] route se page param aata hai
+    const pageFromRoute = params.page ? parseInt(params.page) : 1;
+
+    const [blogs, setBlogs] = useState(initialBlogs);
+    const [selectedCategory, setSelectedCategory] = useState(null);
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+    const [currentPage, setCurrentPage] = useState(pageFromRoute);
+    const [totalPages, setTotalPages] = useState(initialTotalPages);
+    // No loading on first render if SSR data provided
+    const [isLoading, setIsLoading] = useState(false);
+    const [hasError, setHasError] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
+
+    // Sync currentPage when route segment changes (e.g. browser back/forward)
+    useEffect(() => {
+        setCurrentPage(pageFromRoute);
+    }, [pageFromRoute]);
+
+    // Navigate to a new page using clean dynamic routes
+    // URL structure: /blog/ for page 1, /blog/page/2/ for page 2+
+    const navigateToPage = (newPage) => {
+        setCurrentPage(newPage);
+        if (newPage <= 1) {
+            router.push(`/blog`);
+        } else {
+            router.push(`/blog/page/${newPage}`);
+        }
+    };
+
+    // Fetch blogs with pagination
+    const fetchData = async (page = 1, category = selectedCategory) => {
+        setIsLoading(true);
+        setHasError(false);
+        try {
+            let response;
+            if (category) {
+                response = await axios.public.get(`blogs/category_wise/${category}`, {
+                    params: { page, category },
+                });
+            } else {
+                response = await axios.public.get("blogs/index", {
+                    params: { page },
+                });
+            }
+
+            if (
+                response.data.status === "error" ||
+                response.data.status === "warning"
+            ) {
+                setHasError(true);
+                setErrorMessage(response.data.message || "Something went wrong");
+                setBlogs([]);
+                return;
+            }
+
+            setBlogs(response.data.data);
+            // category_wise API may not have pagination — handle gracefully
+            setTotalPages(response.data.pagination?.last_page || 1);
+        } catch (error) {
+            console.log("Error fetching blogs:", error);
+            setHasError(true);
+            setErrorMessage("Failed to load blogs. Please try again later.");
+            setBlogs([]);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        // Skip initial fetch only if SSR data provided AND no category selected AND on page 1
+        if (initialBlogs.length > 0 && currentPage === 1 && !selectedCategory) return;
+        fetchData(currentPage, selectedCategory);
+    }, [selectedCategory, currentPage]);
+
+    const toggleSidebar = () => {
+        setIsSidebarOpen(!isSidebarOpen);
+    };
+
+    const handleCategoryChange = (category) => {
+        setSelectedCategory(category);
+        console.log("categoriescategories" , category)
+        setCurrentPage(1);
+        setIsSidebarOpen(false);
+    };
+
+    const handleNextPage = () => {
+        if (currentPage < totalPages) {
+            navigateToPage(currentPage + 1);
+        }
+    };
+
+    const handlePreviousPage = () => {
+        if (currentPage > 1) {
+            navigateToPage(currentPage - 1);
+        }
+    };
+
+    // ✅ FIXED: All conditional returns moved AFTER all hooks
+    if (isLoading) return <Loader />
+
+    if (hasError) {
+        return <ErrorPage message={errorMessage} />;
+    }
+
+    return (
+        <div className="relative py-16">
+            <CustomHeroSection heading='Hot Topics' path='Blog ' bgImage="CustomHeroAssets/banners.png" />
+            <div className="lg:hidden flex justify-end p-4">
+                <button
+                    onClick={toggleSidebar}
+                    className="text-white text-xl flex justify-center items-center bg-[#1E7773] p-2 rounded-full"
+                >
+                    <RiFilter3Line />
+                </button>
+            </div>
+            <div className='flex w-full gap-4 text-white'>
+                {/* Sidebar — overlay on mobile, visible on desktop */}
+                <div className='lg:ml-4 w-0 lg:w-64 flex-shrink-0'>
+                <BlogSidebar blogs={blogs} onCategorySelect={handleCategoryChange} toggleSidebar={toggleSidebar} isSidebarOpen={isSidebarOpen} initialCategories={initialCategories} />
+                </div>
+                <section className="flex-1 min-w-0 px-4">
+                    <div className='w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6'>
+                        {blogs.length > 0 ? (
+                            blogs.map((data) => (
+                                <div className='w-full' key={data.id}>
+                                    <Link href={`/${data.slug}`} data-aos="fade-up" className="flex flex-col gap-3 py-4 justify-center items-start" aria-label={`Read ${data.title}`}>
+                                        <Image
+                                            className="rounded-xl w-full h-[220px] md:h-[260px] object-cover"
+                                            src={
+                                                data.main_image
+                                                    ? `${Assets_Url}${data.main_image}`
+                                                    : data.image
+                                                    ? `${Assets_Url}${data.image}`
+                                                    : `${Assets_Url}/storage/blog_images/default.png`
+                                            }
+                                            alt={data.title} width={800} height={500} />
+                                        <p className="text-sm text-start text-[#898989]">{data.category} | {new Date(data.date).toDateString()}</p>
+                                        <p className="text-lg text-start font-semibold leading-snug">{data.title}</p>
+                                    </Link>
+                                </div>
+                            ))
+                        ) : (
+                            <p className="text-gray-400">No blogs found</p>
+                        )}
+                    </div>
+                    {/* Pagination */}
+                    {totalPages > 1 && (
+                        <div className="flex justify-center items-center gap-2 mt-10 mb-6 text-white">
+                            {/* Prev */}
+                            <button
+                                onClick={handlePreviousPage}
+                                disabled={currentPage === 1}
+                                className={`px-3 py-1 text-lg transition-colors ${currentPage === 1 ? 'opacity-30 cursor-not-allowed' : 'hover:text-white text-gray-400 cursor-pointer'}`}
+                            >
+                                &larr;
+                            </button>
+
+                            {/* Page numbers with ellipsis */}
+                            {(() => {
+                                let pages = [];
+                                if (totalPages <= 7) {
+                                    pages = Array.from({ length: totalPages }, (_, i) => i + 1);
+                                } else if (currentPage <= 4) {
+                                    pages = [1, 2, 3, 4, 5, '...', totalPages];
+                                } else if (currentPage > totalPages - 4) {
+                                    pages = [1, '...', totalPages - 4, totalPages - 3, totalPages - 2, totalPages - 1, totalPages];
+                                } else {
+                                    pages = [1, '...', currentPage - 1, currentPage, currentPage + 1, '...', totalPages];
+                                }
+                                return pages.map((page, index) => (
+                                    <button
+                                        key={index}
+                                        onClick={() => { if (page !== '...') navigateToPage(page); }}
+                                        disabled={page === '...'}
+                                        className={`h-10 w-10 flex items-center justify-center rounded-full transition-all duration-300 text-lg ${
+                                            page === '...' ? 'cursor-default text-gray-500'
+                                            : currentPage === page ? 'bg-white text-[#2a2833] font-bold'
+                                            : 'cursor-pointer hover:bg-white/10 text-gray-400'
+                                        }`}
+                                    >
+                                        {page}
+                                    </button>
+                                ));
+                            })()}
+
+                            {/* Next */}
+                            <button
+                                onClick={handleNextPage}
+                                disabled={currentPage === totalPages}
+                                className={`px-3 py-1 text-lg transition-colors ${currentPage === totalPages ? 'opacity-30 cursor-not-allowed' : 'hover:text-white text-gray-400 cursor-pointer'}`}
+                            >
+                                &rarr;
+                            </button>
+                        </div>
+                    )}
+                </section>
+            </div>
+        </div>
+    );
+}
+
+export default Blog;
+
+
+export const BlogSidebar = ({ onCategorySelect, toggleSidebar, isSidebarOpen, blogs, initialCategories = [] }) => {
+    const [categories, setCategories] = useState(initialCategories);
+    const [searchTerm, setSearchTerm] = useState('');
+    const [filteredCategories, setFilteredCategories] = useState(initialCategories);
+
+    useEffect(() => {
+        // Only fetch if no SSR categories provided
+        if (initialCategories.length > 0) return;
+        const fetchData = async () => {
+            try {
+                const response = await axios.public.get('product/category');
+                setCategories(response.data.data);
+                setFilteredCategories(response.data.data);
+            } catch (error) {
+                console.log(error);
+            }
+        };
+        fetchData();
+    }, []);
+
+    const handleSearch = (e) => {
+        const value = e.target.value;
+        setSearchTerm(value);
+
+        const filtered = categories.filter((category) =>
+            category.name.toLowerCase().includes(value.toLowerCase())
+        );
+        setFilteredCategories(filtered);
+    };
+
+    const instagram = [
+        "HomeAssets/InstaFeed/instaImg01.svg",
+        "HomeAssets/InstaFeed/instaImg02.svg",
+        "HomeAssets/InstaFeed/instaImg01.svg",
+        "HomeAssets/InstaFeed/instaImg02.svg",
+        "HomeAssets/InstaFeed/instaImg01.svg",
+        "HomeAssets/InstaFeed/instaImg02.svg",
+    ];
+
+    return (
+        <div
+            className={`fixed lg:static lg:block bg-[#33333F] lg:bg-transparent top-0 left-0 w-2/3 lg:w-full h-auto overflow-y-scroll lg:overflow-y-auto text-white p-4 lg:rounded-lg transition-transform duration-300 ease-in-out z-50 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
+                } lg:translate-x-0`}
+        >
+            {/* Close button for mobile */}
+            <div className="lg:hidden flex justify-end">
+                <button
+                    onClick={toggleSidebar}
+                    className="text-white text-xl p-2"
+                >
+                    <RxCross2 />
+                </button>
+            </div>
+
+            {/* Search bar */}
+            <div className='flex justify-between bg-[#33333F] items-center rounded-lg p-1 py-2 px-2 mb-6'>
+                <input
+                    type="text"
+                    placeholder='Search...'
+                    value={searchTerm}
+                    onChange={handleSearch}
+                    className='bg-[#33333F] focus:outline-none'
+                />
+                <CiSearch />
+            </div>
+
+            {/* Categories Section */}
+            <div className="mb-6 p-4 bg-[#33333F] rounded-lg">
+                <h2 className="text-lg font-semibold mb-4">CATEGORIES</h2>
+                <ul className="h-[300px] lg:h-auto overflow-y-scroll lg:overflow-y-auto">
+                    {filteredCategories.length > 0 ? (
+                        filteredCategories.map((category) => (
+                            <li
+                                key={category.id}
+                                className="text-base hover:text-gray-400 cursor-pointer border-b border-gray-500 py-4"
+                                onClick={() => onCategorySelect(category.id)}
+                            >
+                                {category.name}
+                            </li>
+                        ))
+                    ) : (
+                        <p className="text-gray-400">No categories found</p>
+                    )}
+                </ul>
+            </div>
+
+            {/* Top Posts Section */}
+            <div className='mb-2 p-4 bg-[#33333F] rounded-lg'>
+                <h2 className="text-lg font-semibold mb-4">TOP POSTS</h2>
+                <ul className="h-[300px] lg:h-auto overflow-y-scroll lg:overflow-y-auto">
+                    {blogs.slice(0, 2).map((post) => (
+                        <li key={post.id} className="text-sm border-b border-gray-500 py-4">
+                            <div className="flex space-x-2">
+                                <span className="text-sm font-semibold">{post.id}</span>
+                                <div>
+                                    <h3 className="font-medium text-sm">{post.title}</h3>
+                                    <p className="text-xs text-gray-400">Categories: {post.category} - {post.date}</p>
+                                </div>
+                            </div>
+                        </li>
+                    ))}
+                </ul>
+            </div>
+
+            {/* Instagram Section */}
+            <div className="mb-6">
+                <h2 className="text-lg font-semibold mb-4 p-4 pb-2">INSTAGRAM</h2>
+                <div className="flex flex-wrap">
+                    {instagram.map((insta, index) => (
+                        <Image key={index} src={`${Image_Url}${insta}`} alt="" className='w-[80px] h-[80px] my-1' width={500} height={500} />
+                    ))}
+                </div>
+            </div>
+        </div>
+    );
+};

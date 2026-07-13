@@ -1,0 +1,65 @@
+import { resolveCanonical, getCanonicalUrl } from "../lib/getCanonicalUrl";
+
+// 🟩 Dynamic Metadata Function for Account Settings Page
+export async function generateMetadata() {
+  try {
+    const res = await fetch(
+      "https://ecommerce-inventory.thegallerygen.com/api/page/detail/6", // API page ID for Account Settings
+      { cache: "no-store" }
+    );
+
+    if (!res.ok) {
+      throw new Error(`API error: ${res.status}`);
+    }
+
+    const data = await res.json();
+
+    return {
+      title: data?.data?.meta_title || "Account Settings",
+      description: data?.data?.meta_description || "Manage your account settings",
+
+      alternates: {
+        canonical:
+          resolveCanonical(data?.data?.canonical_url, "/profile/") ??
+          undefined,
+      },
+
+      robots: {
+        index: data?.data?.robots_index !== "noindex",
+        follow: data?.data?.robots_follow !== "nofollow",
+
+        googleBot: {
+          index: data?.data?.robots_index !== "noindex",
+          follow: data?.data?.robots_follow !== "nofollow",
+        },
+      },
+    };
+  } catch (error) {
+    console.error("Account Settings metadata fetch failed:", error);
+
+    return {
+      title: "Account Settings",
+      description: "Manage your account settings",
+      alternates: { canonical: getCanonicalUrl("/profile/") ?? undefined },
+      robots: {
+        index: true,
+        follow: true,
+      },
+    };
+  }
+}
+
+// 🟩 Load AccountSettings Component
+
+import React, { Suspense } from "react";
+import { AccountSettings } from '../../app/src/Pages/AccountSettings';
+
+export const dynamic = "force-dynamic";
+export default function Page() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      
+ <AccountSettings />     
+ </Suspense>
+  );
+}

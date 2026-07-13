@@ -1,0 +1,80 @@
+"use client";
+import React, { useEffect } from "react";
+import { Assets_Url, Image_Url } from "../const";
+import Aos from "aos";
+import "aos/dist/aos.css";
+import Link from "next/link";
+
+function CustomHeroSection({
+    heading,
+    path,
+    path2,
+    title,
+    bgImage,
+    heroImage,
+    custom,
+    hideContent,
+}) {
+    useEffect(() => {
+        Aos.init({ duration: "2000", delay: "0" });
+    }, []);
+
+    const backgroundImageUrl = custom === "customization" ? "/images/customization-banner.jpeg" : custom === "shop" ? "/images/shop-all-banner.jpeg" : heroImage
+        ? `${Assets_Url}${heroImage}`
+        : bgImage
+            ? bgImage.startsWith("http") || bgImage.startsWith("/")
+                ? bgImage
+                : `${Image_Url}${bgImage}`
+            : `${Assets_Url}CustomHeroAssets/CustomHeroBgImg.svg`;
+
+
+    return (
+        <div className={`w-full flex items-center text-black relative 
+    ${custom === "shop" || custom === "customization" ? "h-auto" : "h-[250px] md:h-[500px] overflow-hidden"}
+    ${custom === "customization" || custom === "shop" ? "" : "2xl:h-[500px]"}`}
+
+            style={{
+                backgroundImage: `url('${backgroundImageUrl}')`,
+                backgroundRepeat: "no-repeat",
+                backgroundSize: custom === "shop" || custom === "customization" ? "100% auto" : "cover",
+                marginTop: "90px",
+                backgroundPosition: "center",
+                ...(custom === "shop" || custom === "customization" ? { aspectRatio: "3 / 1" } : {}),
+            }}
+        >
+            {/* Dark overlay for text readability — only when content is visible */}
+            {!hideContent && <div className="absolute inset-0 bg-black/50" />}
+
+            {/* Left text content */}
+            {hideContent ? null : (
+                <div className="md:w-[40%] md:pl-20 pl-10 relative z-10">
+                    <h1 className="md:text-6xl text-5xl font-bazaar text-white">
+                        {heading}
+                    </h1>
+                    <h1 className="md:text-5xl text-4xl font-bazaar text-white">
+                        {title}
+                    </h1>
+
+                    {path2 ? (
+                        <p className="text-lg text-white">
+                            <Link aria-label="Home" href={"/"}>Home</Link> /{" "}
+                            <Link aria-label={path} href={"/shop"}>{path}</Link> / {path2}
+                        </p>
+                    ) : (
+                        <p className="text-lg text-white">
+                            <Link aria-label="Home" href={"/"}>Home</Link> / {path}
+                        </p>
+                    )}
+                </div>
+            )}
+
+            {/* Decorative images */}
+            {/* <img data-aos='fade-right' src={`${Image_Url}CustomHeroAssets/Cup.svg`} className='absolute -bottom-10 left-0 w-18' alt="" />
+      <img data-aos='fade-down' src={`${Image_Url}CustomHeroAssets/glass.svg`} className='absolute top-6 md:right-36 right-0 w-18' alt="" />
+      <img data-aos='fade-left' src={`${Image_Url}CustomHeroAssets/shopper.svg`} className='absolute md:bottom-16 bottom-8 right-0 w-18' alt="" />
+      <img data-aos='fade-up' src={`${Image_Url}CustomHeroAssets/basket.svg`} className='absolute hidden md:block bottom-16 right-[30rem] w-18' alt="" /> */}
+        </div>
+    );
+}
+
+export default CustomHeroSection;
