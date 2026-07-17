@@ -19,7 +19,7 @@ async function getPageData() {
 
     const meta = metaRes.ok ? await metaRes.json() : null;
     const blogs = blogsRes.ok ? await blogsRes.json() : null;
-    console.log("blogs data",blogs);
+    console.log("blogs data", blogs);
 
     return {
       meta: meta?.data || null,
@@ -43,14 +43,14 @@ export async function generateMetadata() {
     description: meta?.meta_description || "Read our latest blog posts.",
     ...(meta?.focus_keyword ? { keywords: meta.focus_keyword } : {}),
     alternates: canonical ? { canonical } : undefined,
-    robots: {
-      index: meta?.robots_index !== "noindex",
-      follow: meta?.robots_follow !== "nofollow",
-      googleBot: {
-        index: meta?.robots_index !== "noindex",
-        follow: meta?.robots_follow !== "nofollow",
-      },
-    },
+    // robots: {
+    //   index: meta?.robots_index !== "noindex",
+    //   follow: meta?.robots_follow !== "nofollow",
+    //   googleBot: {
+    //     index: meta?.robots_index !== "noindex",
+    //     follow: meta?.robots_follow !== "nofollow",
+    //   },
+    // },
   };
 }
 

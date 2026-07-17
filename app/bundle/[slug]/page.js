@@ -16,7 +16,10 @@ async function getBundleData(slug) {
       next: { revalidate: 300 },
     });
     if (!data?.data) return null;
-    const norm = (s) => String(s || "").replace(/\/+$/, "").toLowerCase();
+    const norm = (s) =>
+      String(s || "")
+        .replace(/\/+$/, "")
+        .toLowerCase();
     return data.data.find((b) => norm(b.slug) === norm(slug)) || null;
   } catch {
     return null;
@@ -29,7 +32,11 @@ export async function generateMetadata({ params }) {
     const bundle = await getBundleData(slug || "");
     const slugClean = String(slug || "").replace(/^\/+|\/+$/g, "");
     const canonical = resolveBundleCanonical(bundle?.canonical_url, slugClean);
-    const title = bundle?.meta_title || (bundle?.name ? `${bundle.name} - Disposable Bazaar` : "Bundle - Disposable Bazaar");
+    const title =
+      bundle?.meta_title ||
+      (bundle?.name
+        ? `${bundle.name} - Disposable Bazaar`
+        : "Bundle - Disposable Bazaar");
     const description = bundle?.description
       ? bundle.description.replace(/<[^>]*>/g, "").slice(0, 160)
       : "Premium bundle deals at Disposable Bazaar.";
@@ -41,14 +48,14 @@ export async function generateMetadata({ params }) {
       alternates: canonical ? { canonical } : undefined,
       openGraph: { title, description, siteName: "Disposable Bazaar" },
       twitter: { card: "summary", title, description },
-      robots: { index: true, follow: true, googleBot: { index: true, follow: true } },
+      // robots: { index: true, follow: true, googleBot: { index: true, follow: true } },
     };
   } catch (err) {
     console.error("[bundle/page] generateMetadata error:", err?.message);
     return {
       title: "Bundle - Disposable Bazaar",
       description: "Premium bundle deals at Disposable Bazaar.",
-      robots: { index: true, follow: true },
+      // robots: { index: true, follow: true },
     };
   }
 }
@@ -64,12 +71,17 @@ export default async function Page({ params }) {
       if (raw && raw !== "null") {
         schema = JSON.stringify(JSON.parse(raw)).replace(/</g, "\\u003c");
       }
-    } catch { schema = null; }
+    } catch {
+      schema = null;
+    }
 
     return (
       <>
         {schema && (
-          <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: schema }} />
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: schema }}
+          />
         )}
         <BundleDetailClient initialBundle={bundle} slug={slug} />
       </>

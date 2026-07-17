@@ -30,14 +30,14 @@ export async function generateMetadata() {
       detail?.meta_description || "Privacy policy - Disposable Bazaar",
     ...(detail?.focus_keyword ? { keywords: detail.focus_keyword } : {}),
     alternates: canonical ? { canonical } : undefined,
-    robots: {
-      index: detail?.robots_index !== "noindex",
-      follow: detail?.robots_follow !== "nofollow",
-      googleBot: {
-        index: detail?.robots_index !== "noindex",
-        follow: detail?.robots_follow !== "nofollow",
-      },
-    },
+    // robots: {
+    //   index: detail?.robots_index !== "noindex",
+    //   follow: detail?.robots_follow !== "nofollow",
+    //   googleBot: {
+    //     index: detail?.robots_index !== "noindex",
+    //     follow: detail?.robots_follow !== "nofollow",
+    //   },
+    // },
   };
 }
 

@@ -14,15 +14,12 @@ const SITE = "https://dispasible-bazar-persnal.vercel.app";
 
 async function getBlogData(slug) {
   try {
-    const { data } = await fetchJson(
-      `${API_BASE}/blogs/s/details`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ slug: `${slug}/` }),
-        next: { revalidate: 600 },
-      }
-    );
+    const { data } = await fetchJson(`${API_BASE}/blogs/s/details`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ slug: `${slug}/` }),
+      next: { revalidate: 600 },
+    });
 
     if (!data || data.status !== "success") return null;
     const blogData = data.data || null;
@@ -30,17 +27,18 @@ async function getBlogData(slug) {
     // Fetch main_image from listing if missing
     if (blogData?.blog && !blogData.blog.main_image) {
       try {
-        const { data: listData } = await fetchJson(
-          `${API_BASE}/blogs/index`,
-          { next: { revalidate: 600 } }
-        );
+        const { data: listData } = await fetchJson(`${API_BASE}/blogs/index`, {
+          next: { revalidate: 600 },
+        });
         const match = listData?.data?.find?.(
-          (b) => b.slug === `${slug}/` || b.slug === slug
+          (b) => b.slug === `${slug}/` || b.slug === slug,
         );
         if (match?.main_image) {
           blogData.blog.main_image = match.main_image.replace(/\/+$/, "");
         }
-      } catch { /* ignore */ }
+      } catch {
+        /* ignore */
+      }
     }
 
     return blogData;
@@ -57,8 +55,13 @@ export async function generateMetadata({ params }) {
     const blog = data?.blog;
 
     const title = seo?.meta_title || blog?.title || "Blog - Disposable Bazaar";
-    const description = seo?.meta_description || blog?.excerpt || "Read the latest articles from Disposable Bazaar.";
-    const fallbackPath = slug ? `/${String(slug).replace(/^\/+|\/+$/g, "")}/` : "/blog/";
+    const description =
+      seo?.meta_description ||
+      blog?.excerpt ||
+      "Read the latest articles from Disposable Bazaar.";
+    const fallbackPath = slug
+      ? `/${String(slug).replace(/^\/+|\/+$/g, "")}/`
+      : "/blog/";
     const canonical = resolveCanonical(seo?.canonical_url, fallbackPath);
 
     const imageUrl = blog?.main_image
@@ -83,18 +86,18 @@ export async function generateMetadata({ params }) {
         description,
         images: [imageUrl],
       },
-      robots: {
-        index: true,
-        follow: true,
-        googleBot: { index: true, follow: true },
-      },
+      // robots: {
+      //   index: true,
+      //   follow: true,
+      //   googleBot: { index: true, follow: true },
+      // },
     };
   } catch (err) {
     console.error("[slug/page] generateMetadata error:", err?.message);
     return {
       title: "Blog - Disposable Bazaar",
       description: "Read the latest articles from Disposable Bazaar.",
-      robots: { index: true, follow: true },
+      // robots: { index: true, follow: true },
     };
   }
 }
@@ -112,7 +115,9 @@ export default async function Page({ params }) {
       if (raw) {
         schema = JSON.stringify(JSON.parse(raw)).replace(/</g, "\\u003c");
       }
-    } catch { schema = null; }
+    } catch {
+      schema = null;
+    }
 
     return (
       <>
@@ -123,7 +128,10 @@ export default async function Page({ params }) {
           />
         )}
         <Suspense fallback={null}>
-          <BlogDetailPage initialBlog={blog} initialRecommended={recommendedBlogs} />
+          <BlogDetailPage
+            initialBlog={blog}
+            initialRecommended={recommendedBlogs}
+          />
         </Suspense>
       </>
     );

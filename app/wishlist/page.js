@@ -1,4 +1,3 @@
-
 import { resolveCanonical, getCanonicalUrl } from "../lib/getCanonicalUrl";
 
 // 🟩 Dynamic Metadata Function for Wishlist Page
@@ -6,7 +5,7 @@ export async function generateMetadata() {
   try {
     const res = await fetch(
       "https://ecommerce-inventory.thegallerygen.com/api/page/detail/11", // API page ID for Wishlist
-      { cache: "no-store" }
+      { cache: "no-store" },
     );
 
     if (!res.ok) {
@@ -28,15 +27,15 @@ export async function generateMetadata() {
           undefined,
       },
 
-      robots: {
-        index: data?.data?.robots_index !== "noindex",
-        follow: data?.data?.robots_follow !== "nofollow",
+      // robots: {
+      //   index: data?.data?.robots_index !== "noindex",
+      //   follow: data?.data?.robots_follow !== "nofollow",
 
-        googleBot: {
-          index: data?.data?.robots_index !== "noindex",
-          follow: data?.data?.robots_follow !== "nofollow",
-        },
-      },
+      //   googleBot: {
+      //     index: data?.data?.robots_index !== "noindex",
+      //     follow: data?.data?.robots_follow !== "nofollow",
+      //   },
+      // },
     };
   } catch (error) {
     console.error("Wishlist metadata fetch failed:", error);
@@ -45,18 +44,15 @@ export async function generateMetadata() {
       title: "Wishlist",
       description: "Your Wishlist",
       alternates: { canonical: getCanonicalUrl("/wishlist/") ?? undefined },
-      robots: {
-        index: true,
-        follow: true,
-      },
+      // robots: {
+      //   index: true,
+      //   follow: true,
+      // },
     };
   }
 }
 
 // 🟩 Load Wishlist Component
-
-
-
 
 import { Suspense } from "react";
 import Wishlist from "../src/Pages/Wishlist";
@@ -69,4 +65,3 @@ export default function Page() {
     </Suspense>
   );
 }
-

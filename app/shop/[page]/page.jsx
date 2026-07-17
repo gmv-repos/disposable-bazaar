@@ -56,14 +56,14 @@ export async function generateMetadata({ params }) {
       "Browse our full collection of disposable products.",
     ...(pageData?.focus_keyword ? { keywords: pageData.focus_keyword } : {}),
     alternates: canonical ? { canonical } : undefined,
-    robots: {
-      index: pageData?.robots_index !== "noindex",
-      follow: pageData?.robots_follow !== "nofollow",
-      googleBot: {
-        index: pageData?.robots_index !== "noindex",
-        follow: pageData?.robots_follow !== "nofollow",
-      },
-    },
+    // robots: {
+    //   index: pageData?.robots_index !== "noindex",
+    //   follow: pageData?.robots_follow !== "nofollow",
+    //   googleBot: {
+    //     index: pageData?.robots_index !== "noindex",
+    //     follow: pageData?.robots_follow !== "nofollow",
+    //   },
+    // },
   };
 }
 

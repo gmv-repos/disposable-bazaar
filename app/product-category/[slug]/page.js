@@ -15,7 +15,9 @@ const API_BASE = "https://ecommerce-inventory.thegallerygen.com/api";
 const BLOCKED_SLUGS = new Set(["kraft-paper-rectangular-bowl"]);
 
 const normalize = (s) =>
-  decodeURIComponent(String(s || "")).toLowerCase().replace(/\/+$/, "");
+  decodeURIComponent(String(s || ""))
+    .toLowerCase()
+    .replace(/\/+$/, "");
 
 function findCatBySlug(cats, targetSlug) {
   for (const c of cats) {
@@ -34,14 +36,16 @@ async function getPageData(slug) {
       next: { revalidate: 600 },
     });
 
-    if (!catData?.data) return { cat: null, products: [], category: null, apiDown: true };
+    if (!catData?.data)
+      return { cat: null, products: [], category: null, apiDown: true };
 
     const cat = findCatBySlug(catData.data, slug);
-    if (!cat) return { cat: null, products: [], category: null, apiDown: false };
+    if (!cat)
+      return { cat: null, products: [], category: null, apiDown: false };
 
     const { data: prodData } = await fetchJson(
       `${API_BASE}/search/product?category_id=${cat.id}&sort_by=1`,
-      { next: { revalidate: 600 } }
+      { next: { revalidate: 600 } },
     );
 
     return {
@@ -60,15 +64,24 @@ export async function generateMetadata({ params }) {
   try {
     const { slug } = await params;
     if (BLOCKED_SLUGS.has(String(slug || "").replace(/\/+$/, ""))) {
-      return { robots: { index: false, follow: false } };
+      // return { robots: { index: false, follow: false } };
+      return false;
     }
 
     const { cat, apiDown } = await getPageData(slug || "");
     const seo = cat?.categorySeoMetadata;
     const slugClean = String(slug || "").replace(/^\/+|\/+$/g, "");
-    const canonical = resolveCanonical(seo?.canonical_url, `/product-category/${slugClean}/`);
-    const title = seo?.meta_title || cat?.name || (apiDown ? "Product Category - Disposable Bazaar" : "Product Category");
-    const description = seo?.meta_description || `Browse ${cat?.name || "products"} at Disposable Bazaar.`;
+    const canonical = resolveCanonical(
+      seo?.canonical_url,
+      `/product-category/${slugClean}/`,
+    );
+    const title =
+      seo?.meta_title ||
+      cat?.name ||
+      (apiDown ? "Product Category - Disposable Bazaar" : "Product Category");
+    const description =
+      seo?.meta_description ||
+      `Browse ${cat?.name || "products"} at Disposable Bazaar.`;
 
     return {
       title,
@@ -76,14 +89,18 @@ export async function generateMetadata({ params }) {
       alternates: canonical ? { canonical } : undefined,
       openGraph: { title, description, siteName: "Disposable Bazaar" },
       twitter: { card: "summary", title, description },
-      robots: { index: true, follow: true, googleBot: { index: true, follow: true } },
+      // robots: {
+      //   index: true,
+      //   follow: true,
+      //   googleBot: { index: true, follow: true },
+      // },
     };
   } catch (err) {
     console.error("[category/page] generateMetadata error:", err?.message);
     return {
       title: "Product Category - Disposable Bazaar",
       description: "Browse our product categories at Disposable Bazaar.",
-      robots: { index: true, follow: true },
+      // robots: { index: true, follow: true },
     };
   }
 }
@@ -105,16 +122,26 @@ export default async function Page({ params }) {
     let schema = null;
     try {
       const raw = cat?.categorySeoMetadata?.schema;
-      if (raw) { JSON.parse(raw); schema = raw; }
-    } catch { schema = null; }
+      if (raw) {
+        JSON.parse(raw);
+        schema = raw;
+      }
+    } catch {
+      schema = null;
+    }
 
     return (
       <>
         {schema && (
-          <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: schema }} />
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: schema }}
+          />
         )}
         <Suspense fallback={null}>
-          <CategoryPageClient initialData={cat ? { products, category } : null} />
+          <CategoryPageClient
+            initialData={cat ? { products, category } : null}
+          />
         </Suspense>
       </>
     );

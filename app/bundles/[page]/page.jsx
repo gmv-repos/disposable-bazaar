@@ -25,14 +25,14 @@ export async function generateMetadata({ params }) {
       title: `${baseTitle} - Page ${page}`,
       description: baseDesc,
       alternates: canonical ? { canonical } : undefined,
-      robots: {
-        index: data?.data?.robots_index !== "noindex",
-        follow: data?.data?.robots_follow !== "nofollow",
-        googleBot: {
-          index: data?.data?.robots_index !== "noindex",
-          follow: data?.data?.robots_follow !== "nofollow",
-        },
-      },
+      // robots: {
+      //   index: data?.data?.robots_index !== "noindex",
+      //   follow: data?.data?.robots_follow !== "nofollow",
+      //   googleBot: {
+      //     index: data?.data?.robots_index !== "noindex",
+      //     follow: data?.data?.robots_follow !== "nofollow",
+      //   },
+      // },
     };
   } catch (error) {
     console.error("Bundles paginated metadata fetch failed:", error);
@@ -42,7 +42,7 @@ export async function generateMetadata({ params }) {
       alternates: {
         canonical: getCanonicalUrl(`/bundles/${page}/`) ?? undefined,
       },
-      robots: { index: true, follow: true },
+      // robots: { index: true, follow: true },
     };
   }
 }

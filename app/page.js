@@ -5,7 +5,7 @@ export async function generateMetadata() {
   try {
     const res = await fetch(
       "https://ecommerce-inventory.thegallerygen.com/api/page/detail/7",
-      { next: { revalidate: 300 } }
+      { next: { revalidate: 300 } },
     );
 
     const data = await res.json();
@@ -13,17 +13,20 @@ export async function generateMetadata() {
 
     return {
       title: data?.data?.meta_title || "Disposable Bazaar",
-      description: data?.data?.meta_description || "Quality disposable products",
-      ...(data?.data?.focus_keyword ? { keywords: data.data.focus_keyword } : {}),
+      description:
+        data?.data?.meta_description || "Quality disposable products",
+      ...(data?.data?.focus_keyword
+        ? { keywords: data.data.focus_keyword }
+        : {}),
       ...(canonical ? { alternates: { canonical } } : {}),
-      robots: {
-        index: data?.data?.robots_index !== "noindex",
-        follow: data?.data?.robots_follow !== "nofollow",
-        googleBot: {
-          index: data?.data?.robots_index !== "noindex",
-          follow: data?.data?.robots_follow !== "nofollow",
-        },
-      },
+      // robots: {
+      //   index: data?.data?.robots_index !== "noindex",
+      //   follow: data?.data?.robots_follow !== "nofollow",
+      //   googleBot: {
+      //     index: data?.data?.robots_index !== "noindex",
+      //     follow: data?.data?.robots_follow !== "nofollow",
+      //   },
+      // },
     };
   } catch (error) {
     console.error("Metadata fetch failed:", error);
@@ -31,7 +34,7 @@ export async function generateMetadata() {
       title: "Disposable Bazaar",
       description: "Quality disposable products",
       alternates: { canonical: getCanonicalUrl("/") ?? undefined },
-      robots: { index: true, follow: true },
+      // robots: { index: true, follow: true },
     };
   }
 }
@@ -45,10 +48,9 @@ const API_BASE = "https://ecommerce-inventory.thegallerygen.com/api";
 // Fetch page data including schema on the server
 async function getPageData() {
   try {
-    const res = await fetch(
-      `${API_BASE}/page/detail/7`,
-      { next: { revalidate: 300 } }
-    );
+    const res = await fetch(`${API_BASE}/page/detail/7`, {
+      next: { revalidate: 300 },
+    });
     if (!res.ok) return null;
     const data = await res.json();
     return data?.data || null;
@@ -62,7 +64,7 @@ async function getPlasticContainersProducts() {
   try {
     const res = await fetch(
       `${API_BASE}/search/product?category_id=28&sort_by=1`,
-      { next: { revalidate: 300 } }
+      { next: { revalidate: 300 } },
     );
     if (!res.ok) return [];
     const json = await res.json();

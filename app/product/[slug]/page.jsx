@@ -111,18 +111,18 @@ export async function generateMetadata({ params }) {
         description,
         images: [imageUrl],
       },
-      robots: {
-        index: true,
-        follow: true,
-        googleBot: { index: true, follow: true },
-      },
+      // robots: {
+      //   index: true,
+      //   follow: true,
+      //   googleBot: { index: true, follow: true },
+      // },
     };
   } catch (err) {
     console.error("[product/page] generateMetadata error:", err?.message);
     return {
       title: "Product - Disposable Bazaar",
       description: "Shop quality disposable products at Disposable Bazaar.",
-      robots: { index: true, follow: true },
+      // robots: { index: true, follow: true },
     };
   }
 }

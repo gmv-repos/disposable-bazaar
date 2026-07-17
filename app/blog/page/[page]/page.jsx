@@ -47,11 +47,11 @@ export async function generateMetadata({ params }) {
     description: meta?.meta_description || "Read our latest blog posts.",
     ...(meta?.focus_keyword ? { keywords: meta.focus_keyword } : {}),
     alternates: canonical ? { canonical } : undefined,
-    robots: {
-      index: true,
-      follow: true,
-      googleBot: { index: true, follow: true },
-    },
+    // robots: {
+    //   index: true,
+    //   follow: true,
+    //   googleBot: { index: true, follow: true },
+    // },
   };
 }
 

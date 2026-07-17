@@ -5,7 +5,7 @@ export async function generateMetadata() {
   try {
     const res = await fetch(
       "https://ecommerce-inventory.thegallerygen.com/api/page/detail/4",
-      { next: { revalidate: 3600 } }
+      { next: { revalidate: 3600 } },
     );
 
     if (!res.ok) throw new Error(`API error: ${res.status}`);
@@ -16,16 +16,18 @@ export async function generateMetadata() {
     return {
       title: data?.data?.meta_title || "Reviews",
       description: data?.data?.meta_description || "Reviews page",
-      ...(data?.data?.focus_keyword ? { keywords: data.data.focus_keyword } : {}),
+      ...(data?.data?.focus_keyword
+        ? { keywords: data.data.focus_keyword }
+        : {}),
       ...(canonical ? { alternates: { canonical } } : {}),
-      robots: {
-        index: data?.data?.robots_index !== "noindex",
-        follow: data?.data?.robots_follow !== "nofollow",
-        googleBot: {
-          index: data?.data?.robots_index !== "noindex",
-          follow: data?.data?.robots_follow !== "nofollow",
-        },
-      },
+      // robots: {
+      //   index: data?.data?.robots_index !== "noindex",
+      //   follow: data?.data?.robots_follow !== "nofollow",
+      //   googleBot: {
+      //     index: data?.data?.robots_index !== "noindex",
+      //     follow: data?.data?.robots_follow !== "nofollow",
+      //   },
+      // },
     };
   } catch (error) {
     console.error("Reviews metadata fetch failed:", error);
@@ -33,13 +35,12 @@ export async function generateMetadata() {
       title: "Reviews",
       description: "Reviews page",
       alternates: { canonical: getCanonicalUrl("/reviews/") ?? undefined },
-      robots: { index: true, follow: true },
+      // robots: { index: true, follow: true },
     };
   }
 }
 
 // 🟩 Load Reviews Component
-
 
 import React, { Suspense } from "react";
 import Reviews from "../src/Pages/Reviews";
@@ -50,7 +51,9 @@ const API_BASE = "https://ecommerce-inventory.thegallerygen.com/api";
 
 async function getReviewsData() {
   try {
-    const res = await fetch(`${API_BASE}/all_reviews`, { next: { revalidate: 3600 } });
+    const res = await fetch(`${API_BASE}/all_reviews`, {
+      next: { revalidate: 3600 },
+    });
     if (!res.ok) return null;
     return await res.json();
   } catch {

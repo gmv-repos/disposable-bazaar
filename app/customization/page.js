@@ -5,7 +5,7 @@ export async function generateMetadata() {
   try {
     const res = await fetch(
       "https://ecommerce-inventory.thegallerygen.com/api/page/detail/3",
-      { next: { revalidate: 600 } }
+      { next: { revalidate: 600 } },
     );
 
     if (!res.ok) throw new Error(`API returned status ${res.status}`);
@@ -13,30 +13,36 @@ export async function generateMetadata() {
     const data = await res.json();
     const canonical = resolveCanonical(
       data?.data?.canonical_url,
-      "/customization/"
+      "/customization/",
     );
 
     return {
       title: data?.data?.meta_title || "Customization - Disposable Bazar",
-      description: data?.data?.meta_description || "Customization services for all your disposal needs.",
-      ...(data?.data?.focus_keyword ? { keywords: data.data.focus_keyword } : {}),
+      description:
+        data?.data?.meta_description ||
+        "Customization services for all your disposal needs.",
+      ...(data?.data?.focus_keyword
+        ? { keywords: data.data.focus_keyword }
+        : {}),
       ...(canonical ? { alternates: { canonical } } : {}),
-      robots: {
-        index: data?.data?.robots_index !== "noindex",
-        follow: data?.data?.robots_follow !== "nofollow",
-        googleBot: {
-          index: data?.data?.robots_index !== "noindex",
-          follow: data?.data?.robots_follow !== "nofollow",
-        },
-      },
+      // robots: {
+      //   index: data?.data?.robots_index !== "noindex",
+      //   follow: data?.data?.robots_follow !== "nofollow",
+      //   googleBot: {
+      //     index: data?.data?.robots_index !== "noindex",
+      //     follow: data?.data?.robots_follow !== "nofollow",
+      //   },
+      // },
     };
   } catch (error) {
     console.error("Customization metadata fetch failed:", error);
     return {
       title: "Customization - Disposable Bazar",
       description: "Customization Services",
-      alternates: { canonical: getCanonicalUrl("/customization/") ?? undefined },
-      robots: { index: true, follow: true },
+      alternates: {
+        canonical: getCanonicalUrl("/customization/") ?? undefined,
+      },
+      // robots: { index: true, follow: true },
     };
   }
 }
@@ -52,7 +58,9 @@ const API_BASE = "https://ecommerce-inventory.thegallerygen.com/api";
 async function getPageData() {
   try {
     const [productsRes, categoriesRes] = await Promise.all([
-      fetch(`${API_BASE}/search/Customizeproduct?sort_by=1`, { next: { revalidate: 600 } }),
+      fetch(`${API_BASE}/search/Customizeproduct?sort_by=1`, {
+        next: { revalidate: 600 },
+      }),
       fetch(`${API_BASE}/product/category`, { next: { revalidate: 3600 } }),
     ]);
     const products = productsRes.ok ? await productsRes.json() : null;
@@ -83,7 +91,10 @@ export default async function Page() {
       ) : null}
       <Suspense fallback={null}>
         <div className="pt-20 md:pt-10">
-          <Customization initialProducts={products} initialCategories={categories} />
+          <Customization
+            initialProducts={products}
+            initialCategories={categories}
+          />
         </div>
       </Suspense>
     </>

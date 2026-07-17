@@ -5,7 +5,7 @@ export async function generateMetadata() {
   try {
     const res = await fetch(
       "https://ecommerce-inventory.thegallerygen.com/api/page/detail/2",
-      { next: { revalidate: 3600 } }
+      { next: { revalidate: 3600 } },
     );
 
     if (!res.ok) {
@@ -27,15 +27,15 @@ export async function generateMetadata() {
           undefined,
       },
 
-      robots: {
-        index: data?.data?.robots_index !== "noindex",
-        follow: data?.data?.robots_follow !== "nofollow",
+      // robots: {
+      //   index: data?.data?.robots_index !== "noindex",
+      //   follow: data?.data?.robots_follow !== "nofollow",
 
-        googleBot: {
-          index: data?.data?.robots_index !== "noindex",
-          follow: data?.data?.robots_follow !== "nofollow",
-        },
-      },
+      //   googleBot: {
+      //     index: data?.data?.robots_index !== "noindex",
+      //     follow: data?.data?.robots_follow !== "nofollow",
+      //   },
+      // },
     };
   } catch (error) {
     console.error("Inquiry Form metadata fetch failed:", error);
@@ -44,10 +44,10 @@ export async function generateMetadata() {
       title: "Inquiry Form",
       description: "Inquiry form page",
       alternates: { canonical: getCanonicalUrl("/inquiryform/") ?? undefined },
-      robots: {
-        index: true,
-        follow: true,
-      },
+      // robots: {
+      //   index: true,
+      //   follow: true,
+      // },
     };
   }
 }
@@ -62,7 +62,9 @@ const API_BASE = "https://ecommerce-inventory.thegallerygen.com/api";
 
 async function getProducts() {
   try {
-    const res = await fetch(`${API_BASE}/search/product`, { next: { revalidate: 3600 } });
+    const res = await fetch(`${API_BASE}/search/product`, {
+      next: { revalidate: 3600 },
+    });
     if (!res.ok) return [];
     const json = await res.json();
     return json?.data || [];

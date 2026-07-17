@@ -18,14 +18,14 @@ export async function generateMetadata() {
       description: data?.data?.meta_description || "About Us page",
       ...(data?.data?.focus_keyword ? { keywords: data.data.focus_keyword } : {}),
       alternates: canonical ? { canonical } : undefined,
-      robots: {
-        index: data?.data?.robots_index !== "noindex",
-        follow: data?.data?.robots_follow !== "nofollow",
-        googleBot: {
-          index: data?.data?.robots_index !== "noindex",
-          follow: data?.data?.robots_follow !== "nofollow",
-        },
-      },
+      // robots: {
+      //   index: data?.data?.robots_index !== "noindex",
+      //   follow: data?.data?.robots_follow !== "nofollow",
+      //   googleBot: {
+      //     index: data?.data?.robots_index !== "noindex",
+      //     follow: data?.data?.robots_follow !== "nofollow",
+      //   },
+      // },
     };
   } catch (error) {
     console.error("About Us metadata fetch failed:", error);
@@ -33,7 +33,7 @@ export async function generateMetadata() {
       title: "About Us",
       description: "About Us page",
       alternates: { canonical: getCanonicalUrl("/about-us/") ?? undefined },
-      robots: { index: true, follow: true },
+      // robots: { index: true, follow: true },
     };
   }
 }

@@ -37,14 +37,14 @@ export async function generateMetadata() {
     description: meta?.meta_description || "Special bundles and deals on disposable products.",
     ...(meta?.focus_keyword ? { keywords: meta.focus_keyword } : {}),
     alternates: canonical ? { canonical } : undefined,
-    robots: {
-      index: meta?.robots_index !== "noindex",
-      follow: meta?.robots_follow !== "nofollow",
-      googleBot: {
-        index: meta?.robots_index !== "noindex",
-        follow: meta?.robots_follow !== "nofollow",
-      },
-    },
+    // robots: {
+    //   index: meta?.robots_index !== "noindex",
+    //   follow: meta?.robots_follow !== "nofollow",
+    //   googleBot: {
+    //     index: meta?.robots_index !== "noindex",
+    //     follow: meta?.robots_follow !== "nofollow",
+    //   },
+    // },
   };
 }
 

@@ -13,11 +13,11 @@ export async function generateMetadata() {
   return {
     title: "Checkout - Disposable Bazaar",
     alternates: canonical ? { canonical } : undefined,
-    robots: {
-      index: false,
-      follow: true,
-      googleBot: { index: false, follow: true },
-    },
+    // robots: {
+    //   index: false,
+    //   follow: true,
+    //   googleBot: { index: false, follow: true },
+    // },
   };
 }
 

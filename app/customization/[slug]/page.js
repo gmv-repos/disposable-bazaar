@@ -29,7 +29,7 @@ async function fetchCustomizeProduct(slug) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ slug: `${slug}/` }),
         next: { revalidate: 600 },
-      }
+      },
     );
     return data?.data ?? null;
   } catch {
@@ -42,7 +42,7 @@ async function getProductReviews(productId) {
   try {
     const { data } = await fetchJson(
       `${API_BASE}/product_reviews/${productId}/`,
-      { next: { revalidate: 60 } }
+      { next: { revalidate: 60 } },
     );
     return data?.status === "success" ? data : null;
   } catch {
@@ -58,9 +58,16 @@ export async function generateMetadata(props) {
     const seo = data?.seoMetadata;
     const product = data?.product;
 
-    const title = seo?.meta_title || product?.name || "Custom Printing - Disposable Bazaar";
-    const description = seo?.meta_description || product?.description?.replace(/<[^>]*>/g, "").slice(0, 160) || "Customize your packaging with Disposable Bazaar.";
-    const canonical = resolveCanonical(seo?.canonical_url, `/customization/${slug}/`);
+    const title =
+      seo?.meta_title || product?.name || "Custom Printing - Disposable Bazaar";
+    const description =
+      seo?.meta_description ||
+      product?.description?.replace(/<[^>]*>/g, "").slice(0, 160) ||
+      "Customize your packaging with Disposable Bazaar.";
+    const canonical = resolveCanonical(
+      seo?.canonical_url,
+      `/customization/${slug}/`,
+    );
     const imageUrl = product?.product_image?.[0]?.image
       ? `https://ecommerce-inventory.thegallerygen.com/${String(product.product_image[0].image).replace(/^\/+/, "")}`
       : undefined;
@@ -76,22 +83,30 @@ export async function generateMetadata(props) {
         ...(imageUrl ? { images: [imageUrl] } : {}),
         siteName: "Disposable Bazaar",
       },
-      twitter: { card: "summary_large_image", title, description, ...(imageUrl ? { images: [imageUrl] } : {}) },
-      robots: {
-        index: seo?.robots_index !== "noindex",
-        follow: seo?.robots_follow !== "nofollow",
-        googleBot: {
-          index: seo?.robots_index !== "noindex",
-          follow: seo?.robots_follow !== "nofollow",
-        },
+      twitter: {
+        card: "summary_large_image",
+        title,
+        description,
+        ...(imageUrl ? { images: [imageUrl] } : {}),
       },
+      // robots: {
+      //   index: seo?.robots_index !== "noindex",
+      //   follow: seo?.robots_follow !== "nofollow",
+      //   googleBot: {
+      //     index: seo?.robots_index !== "noindex",
+      //     follow: seo?.robots_follow !== "nofollow",
+      //   },
+      // },
     };
   } catch (err) {
-    console.error("[customization/slug/page] generateMetadata error:", err?.message);
+    console.error(
+      "[customization/slug/page] generateMetadata error:",
+      err?.message,
+    );
     return {
       title: "Custom Printing - Disposable Bazaar",
       description: "Customize your packaging with Disposable Bazaar.",
-      robots: { index: true, follow: true },
+      // robots: { index: true, follow: true },
     };
   }
 }
@@ -107,13 +122,26 @@ export default async function Page(props) {
     return (
       <>
         {schemaLd && (
-          <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: schemaLd }} />
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: schemaLd }}
+          />
         )}
-        <CustomizationSlugClient slug={slug} initialData={initialData} initialReviews={initialReviews} />
+        <CustomizationSlugClient
+          slug={slug}
+          initialData={initialData}
+          initialReviews={initialReviews}
+        />
       </>
     );
   } catch (err) {
     console.error("[customization/slug/page] render error:", err?.message);
-    return <CustomizationSlugClient slug="" initialData={null} initialReviews={null} />;
+    return (
+      <CustomizationSlugClient
+        slug=""
+        initialData={null}
+        initialReviews={null}
+      />
+    );
   }
 }
