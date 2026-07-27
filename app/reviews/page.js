@@ -1,12 +1,12 @@
 // 🟩 Dynamic Metadata Function for Reviews Page
 import { resolveCanonical, getCanonicalUrl } from "../lib/getCanonicalUrl";
+import { API_BASE } from "../../constants/constants";
 
 export async function generateMetadata() {
   try {
-    const res = await fetch(
-      "https://ecommerce-inventory.thegallerygen.com/api/page/detail/4",
-      { next: { revalidate: 3600 } },
-    );
+    const res = await fetch(`${API_BASE}/page/detail/4`, {
+      next: { revalidate: 3600 },
+    });
 
     if (!res.ok) throw new Error(`API error: ${res.status}`);
 
@@ -46,8 +46,6 @@ import React, { Suspense } from "react";
 import Reviews from "../src/Pages/Reviews";
 
 export const revalidate = 3600;
-
-const API_BASE = "https://ecommerce-inventory.thegallerygen.com/api";
 
 async function getReviewsData() {
   try {

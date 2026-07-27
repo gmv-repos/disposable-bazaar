@@ -1,10 +1,10 @@
 import { resolveCanonical, getCanonicalUrl } from "../lib/getCanonicalUrl";
-
+import { API_BASE } from "@/constants/constants";
 // 🟩 Dynamic Metadata Function for Wishlist Page
 export async function generateMetadata() {
   try {
     const res = await fetch(
-      "https://ecommerce-inventory.thegallerygen.com/api/page/detail/11", // API page ID for Wishlist
+      `${API_BASE}/page/detail/11`, // API page ID for Wishlist
       { cache: "no-store" },
     );
 

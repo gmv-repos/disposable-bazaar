@@ -5,10 +5,9 @@
 import { Suspense } from "react";
 import BundleShop from "../src/Pages/BundleShop";
 import { serializeLdJson } from "../lib/seo/pageDetail";
+import { API_BASE } from "../../constants/constants";
 
 export const revalidate = 300;
-
-const API_BASE = "https://ecommerce-inventory.thegallerygen.com/api";
 
 async function getPageData() {
   try {

@@ -1,12 +1,12 @@
 // 🟩 Dynamic Metadata Function for Contact Page
 import { resolveCanonical, getCanonicalUrl } from "../lib/getCanonicalUrl";
+import { API_BASE } from "../../constants/constants";
 
 export async function generateMetadata() {
   try {
-    const res = await fetch(
-      "https://ecommerce-inventory.thegallerygen.com/api/page/detail/9",
-      { next: { revalidate: 3600 } },
-    );
+    const res = await fetch(`${API_BASE}/page/detail/9`, {
+      next: { revalidate: 3600 },
+    });
 
     if (!res.ok) throw new Error(`API error: ${res.status}`);
 

@@ -5,10 +5,9 @@
 import BundleDetailClient from "./BundleDetailClient";
 import { resolveBundleCanonical } from "../../lib/getCanonicalUrl";
 import { fetchJson } from "../../lib/fetchWithTimeout";
+import { API_BASE } from "../../../constants/constants";
 
 export const revalidate = 300;
-
-const API_BASE = "https://ecommerce-inventory.thegallerygen.com/api";
 
 async function getBundleData(slug) {
   try {

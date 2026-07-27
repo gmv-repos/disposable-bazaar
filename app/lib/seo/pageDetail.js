@@ -1,3 +1,4 @@
+import { API_BASE } from "../../../constants/constants";
 import {
   getCanonicalUrl,
   buildCanonical,
@@ -7,14 +8,12 @@ import {
 
 export { buildCanonical, validateCanonical, resolveCanonical, getCanonicalUrl };
 
-export const CMS_API_BASE = "https://ecommerce-inventory.thegallerygen.com/api";
-
 export async function fetchPageDetailById(
   id,
   cacheOpts = { next: { revalidate: 3600 } },
 ) {
   try {
-    const res = await fetch(`${CMS_API_BASE}/page/detail/${id}`, cacheOpts);
+    const res = await fetch(`${API_BASE}/page/detail/${id}`, cacheOpts);
     if (!res.ok) return null;
     const json = await res.json();
     return json?.data ?? null;
@@ -30,7 +29,7 @@ export async function fetchPageDetailBySlug(
   try {
     const q = slug.replace(/^\//, "").replace(/\/$/, "");
     const res = await fetch(
-      `${CMS_API_BASE}/page/detail?slug=${encodeURIComponent(q)}`,
+      `${API_BASE}/page/detail?slug=${encodeURIComponent(q)}`,
       cacheOpts,
     );
     if (!res.ok) return null;

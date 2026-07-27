@@ -6,10 +6,9 @@ import CustomizationSlugClient from "./CustomizationSlugClient";
 import { serializeLdJson } from "../../lib/seo/pageDetail";
 import { resolveCanonical } from "../../lib/getCanonicalUrl";
 import { fetchJson } from "../../lib/fetchWithTimeout";
+import { API_BASE, API_Image_BASE } from "../../../constants/constants";
 
 export const revalidate = 600;
-
-const API_BASE = "https://ecommerce-inventory.thegallerygen.com/api";
 
 function slugFromParams(p) {
   try {
@@ -69,7 +68,7 @@ export async function generateMetadata(props) {
       `/customization/${slug}/`,
     );
     const imageUrl = product?.product_image?.[0]?.image
-      ? `https://ecommerce-inventory.thegallerygen.com/${String(product.product_image[0].image).replace(/^\/+/, "")}`
+      ? `${API_Image_BASE}/${String(product.product_image[0].image).replace(/^\/+/, "")}`
       : undefined;
 
     return {

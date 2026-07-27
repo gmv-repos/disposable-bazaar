@@ -3,6 +3,7 @@ import { Suspense } from "react";
 import CustomHeroSection from "../../src/components/CustomHeroSection";
 import ShopClient from "../../src/Pages/ShopClient";
 import { resolveCanonical } from "../../lib/getCanonicalUrl";
+import { API_BASE } from "../../../constants/constants";
 
 export const revalidate = 300;
 
@@ -10,7 +11,7 @@ export const revalidate = 300;
 async function getPageData() {
   try {
     const res = await fetch(
-      "https://ecommerce-inventory.thegallerygen.com/api/page/detail/1",
+      `${API_BASE}/page/detail/1`,
       { next: { revalidate: 300 } }
     );
     if (!res.ok) return null;
@@ -24,7 +25,7 @@ async function getPageData() {
 async function fetchProducts() {
   try {
     const res = await fetch(
-      "https://ecommerce-inventory.thegallerygen.com/api/search/product?sort_by=1",
+      `${API_BASE}/search/product?sort_by=1`,
       { next: { revalidate: 300 } }
     );
     if (!res.ok) return [];

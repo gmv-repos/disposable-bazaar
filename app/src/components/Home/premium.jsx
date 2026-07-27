@@ -16,8 +16,9 @@ import { Pagination, Navigation } from 'swiper/modules';
 import axios from '../../Utils/axios';
 import { Loader } from '../Loader';
 import Link from 'next/link';
+import { API_Image_BASE } from '@/constants/constants';
 
-const IMG_BASE = "https://ecommerce-inventory.thegallerygen.com/public/Frontend/Assets/";
+const IMG_BASE = `${API_Image_BASE}/public/Frontend/Assets/`;
 
 
 // Premium Section
@@ -41,8 +42,8 @@ function Premium({ initialProducts = [] }) {
 export default Premium
 
 
-const FALLBACK_IMG = "https://ecommerce-inventory.thegallerygen.com/public/Frontend/Assets/defaultImage.svg";
-const BASE_URL = "https://ecommerce-inventory.thegallerygen.com";
+const FALLBACK_IMG = `${API_Image_BASE}/public/Frontend/Assets/defaultImage.svg`;
+const BASE_URL = `${API_Image_BASE}`;
 
 function getProductImage(product, index = 0) {
     const img = product?.product_image?.[index]?.image;
@@ -129,24 +130,24 @@ function Slider({ initialProducts = [] }) {
                             </div> */}
                             <div className='flex flex-col items-center justifycenter w-full h-full'>
                                 <Link href={`/product/${product.slug}`}>
-                                <div className="relative p-5 flex justify-center items-center w-[150px] h-[150px] md:w-[250px] md:h-[250px]">
-                                    <Image
-                                        className=" w-full h-full block group-hover:hidden rounded-xl object-cover"
-                                        src={getProductImage(product, 0)}
-                                        alt={product.name || "Product"}
-                                        style={{ transition: 'opacity 0.5s ease 0.3s' }}
-                                        loading='lazy'
-                                        width={500} height={500}
-                                    />
-                                    <Image
-                                        className=" w-full h-full hidden group-hover:block rounded-xl object-cover"
-                                        src={getProductImage(product, 1) || getProductImage(product, 0)}
-                                        alt={product.name || "Product"}
-                                        style={{ transition: 'opacity 0.5s ease 0.3s' }}
-                                        loading='lazy'
-                                        width={500} height={500}
-                                    />
-                                </div>
+                                    <div className="relative p-5 flex justify-center items-center w-[150px] h-[150px] md:w-[250px] md:h-[250px]">
+                                        <Image
+                                            className=" w-full h-full block group-hover:hidden rounded-xl object-cover"
+                                            src={getProductImage(product, 0)}
+                                            alt={product.name || "Product"}
+                                            style={{ transition: 'opacity 0.5s ease 0.3s' }}
+                                            loading='lazy'
+                                            width={500} height={500}
+                                        />
+                                        <Image
+                                            className=" w-full h-full hidden group-hover:block rounded-xl object-cover"
+                                            src={getProductImage(product, 1) || getProductImage(product, 0)}
+                                            alt={product.name || "Product"}
+                                            style={{ transition: 'opacity 0.5s ease 0.3s' }}
+                                            loading='lazy'
+                                            width={500} height={500}
+                                        />
+                                    </div>
                                 </Link>
                             </div>
                             <h4 className="font-bold text-center text-sm md:text-lg ">{product.name}</h4>

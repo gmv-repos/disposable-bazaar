@@ -8,10 +8,10 @@
 import ShopDetails from "./ShopDetails";
 import { resolveProductCanonical } from "../../lib/getCanonicalUrl";
 import { fetchJson } from "../../lib/fetchWithTimeout";
+import { API_BASE, API_Image_BASE } from "../../../constants/constants";
 
 export const revalidate = 600;
 
-const API_BASE = "https://ecommerce-inventory.thegallerygen.com/api";
 const SITE = "https://dispasible-bazar-persnal.vercel.app";
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
@@ -90,7 +90,7 @@ export async function generateMetadata({ params }) {
 
     const canonical = resolveProductCanonical(seo?.canonical_url, resolvedSlug);
     const imageUrl = product?.product_image?.[0]?.image
-      ? `https://ecommerce-inventory.thegallerygen.com/${String(product.product_image[0].image).replace(/^\/+/, "")}`
+      ? `${API_Image_BASE}/${String(product.product_image[0].image).replace(/^\/+/, "")}`
       : `${SITE}/og-default.jpg`;
 
     return {

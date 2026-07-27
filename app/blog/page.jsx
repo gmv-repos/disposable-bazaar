@@ -7,8 +7,6 @@ import BlogClient from "../src/Pages/Blog";
 
 export const revalidate = 300;
 
-const API_BASE = "https://ecommerce-inventory.thegallerygen.com/api";
-
 // ─── Server fetch ─────────────────────────────────────────────────────────────
 async function getPageData() {
   try {
@@ -32,6 +30,7 @@ async function getPageData() {
 }
 
 import { resolveCanonical } from "../lib/getCanonicalUrl";
+import { API_BASE } from "../../constants/constants";
 
 // ─── Metadata ─────────────────────────────────────────────────────────────────
 export async function generateMetadata() {

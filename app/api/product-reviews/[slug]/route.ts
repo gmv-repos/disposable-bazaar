@@ -1,6 +1,5 @@
+import { API_BASE } from "@/constants/constants";
 import { NextResponse } from "next/server";
-
-const API_BASE = "https://ecommerce-inventory.thegallerygen.com/api";
 
 function normalizeSegment(segment: string) {
   try {

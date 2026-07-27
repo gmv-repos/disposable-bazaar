@@ -8,10 +8,10 @@ import { notFound } from "next/navigation";
 import CategoryPageClient from "./CategoryPageClient";
 import { resolveCanonical } from "../../lib/getCanonicalUrl";
 import { fetchJson } from "../../lib/fetchWithTimeout";
+import { API_BASE } from "../../../constants/constants";
 
 export const revalidate = 600;
 
-const API_BASE = "https://ecommerce-inventory.thegallerygen.com/api";
 const BLOCKED_SLUGS = new Set(["kraft-paper-rectangular-bowl"]);
 
 const normalize = (s) =>

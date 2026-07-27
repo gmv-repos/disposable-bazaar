@@ -1,12 +1,12 @@
 // 🟩 Dynamic Metadata Function for Customization Page
 import { resolveCanonical, getCanonicalUrl } from "../lib/getCanonicalUrl";
+import { API_BASE } from "../../constants/constants";
 
 export async function generateMetadata() {
   try {
-    const res = await fetch(
-      "https://ecommerce-inventory.thegallerygen.com/api/page/detail/3",
-      { next: { revalidate: 600 } },
-    );
+    const res = await fetch(`${API_BASE}/page/detail/3`, {
+      next: { revalidate: 600 },
+    });
 
     if (!res.ok) throw new Error(`API returned status ${res.status}`);
 
@@ -52,8 +52,6 @@ import Customization from "../src/Pages/Customization ";
 import { fetchPageDetailById, serializeLdJson } from "../lib/seo/pageDetail";
 
 export const revalidate = 600;
-
-const API_BASE = "https://ecommerce-inventory.thegallerygen.com/api";
 
 async function getPageData() {
   try {

@@ -1,20 +1,18 @@
-
-"use client"; 
+"use client";
 
 import axios from "axios";
 import { getAccessToken } from "./storage";
-
-const API_URL = "https://ecommerce-inventory.thegallerygen.com/api/";
+import { API_BASE } from "@/constants/constants";
 
 const publicApi = axios.create({
-  baseURL: API_URL,
+  baseURL: API_BASE,
   headers: {
     Accept: "application/json",
   },
 });
 
 const protectedApi = axios.create({
-  baseURL: API_URL,
+  baseURL: API_BASE,
   headers: {
     Accept: "application/json",
   },
@@ -30,19 +28,18 @@ protectedApi.interceptors.request.use(
     }
     return config;
   },
-  (error) => Promise.reject(error)
+  (error) => Promise.reject(error),
 );
 
 // Optional response interceptor
 protectedApi.interceptors.response.use(
   (response) => {
- 
     return response;
   },
   (error) => {
     console.error("Response error:", error);
     return Promise.reject(error);
-  }
+  },
 );
 
 // Function to get CSRF token from cookies (client-side only)
@@ -71,7 +68,7 @@ publicApi.interceptors.request.use(
     }
     return config;
   },
-  (error) => Promise.reject(error)
+  (error) => Promise.reject(error),
 );
 
 export default {

@@ -6,10 +6,9 @@ import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import BlogClient from "../../../src/Pages/Blog";
 import { buildCanonical } from "../../../lib/seo/pageDetail";
+import { API_BASE } from "../../../../constants/constants";
 
 export const revalidate = 300;
-
-const API_BASE = "https://ecommerce-inventory.thegallerygen.com/api";
 
 async function getPageData(page = 1) {
   try {

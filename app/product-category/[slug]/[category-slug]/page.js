@@ -6,10 +6,9 @@ import { Suspense } from "react";
 import CategoryPageClient from "../CategoryPageClient";
 import { resolveCanonical } from "../../../lib/getCanonicalUrl";
 import { fetchJson } from "../../../lib/fetchWithTimeout";
+import { API_BASE } from "../../../../constants/constants";
 
 export const revalidate = 600;
-
-const API_BASE = "https://ecommerce-inventory.thegallerygen.com/api";
 
 const normalize = (s) =>
   decodeURIComponent(String(s || ""))

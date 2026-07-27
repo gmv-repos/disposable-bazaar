@@ -10,9 +10,6 @@ import { MdEmail, MdOutlineFileDownload, MdPhone } from "react-icons/md";
 import { CiHeart, CiSearch, CiUser } from "react-icons/ci";
 import { CgMenuRight } from "react-icons/cg";
 import { PiCaretDownThin } from "react-icons/pi";
-
-const IMG_BASE = "https://ecommerce-inventory.thegallerygen.com/public/Frontend/Assets/";
-const PROFILE_BASE = "https://ecommerce-inventory.thegallerygen.com/storage/app/public";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
@@ -23,6 +20,10 @@ import { useCart } from "../..//Context/CartContext";
 
 import axios from "..//..//Utils/axios";
 import { BsWhatsapp } from "react-icons/bs";
+import { API_Image_BASE } from "../../../../constants/constants";
+
+const IMG_BASE = `${API_Image_BASE}/public/Frontend/Assets/`;
+const PROFILE_BASE = `${API_Image_BASE}/storage/app/public`;
 
 
 

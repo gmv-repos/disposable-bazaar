@@ -1,12 +1,11 @@
 import { resolveCanonical, getCanonicalUrl } from "../lib/getCanonicalUrl";
-
+import { API_BASE } from "../../constants/constants";
 // 🟩 Dynamic Metadata Function for Inquiry Form Page
 export async function generateMetadata() {
   try {
-    const res = await fetch(
-      "https://ecommerce-inventory.thegallerygen.com/api/page/detail/2",
-      { next: { revalidate: 3600 } },
-    );
+    const res = await fetch(`${API_BASE}/page/detail/2`, {
+      next: { revalidate: 3600 },
+    });
 
     if (!res.ok) {
       throw new Error(`API error: ${res.status}`);
@@ -57,8 +56,6 @@ import { Suspense } from "react";
 import InquiryFormClient from "../src/Pages/InquiryForm";
 
 export const revalidate = 3600;
-
-const API_BASE = "https://ecommerce-inventory.thegallerygen.com/api";
 
 async function getProducts() {
   try {

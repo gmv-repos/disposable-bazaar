@@ -1,10 +1,9 @@
 import { Suspense } from "react";
 import PrivacyPolicy from "../src/Pages/PrivacyPolicy";
 import { resolveCanonical } from "../lib/getCanonicalUrl";
+import { API_BASE } from "../../constants/constants";
 
 export const revalidate = 86400;
-
-const API_BASE = "https://ecommerce-inventory.thegallerygen.com/api";
 
 async function getPageDetail() {
   try {

@@ -1,10 +1,12 @@
 import { resolveCanonical, getCanonicalUrl } from "../lib/getCanonicalUrl";
 
+import { API_BASE } from "../../constants/constants";
+
 // 🟩 Dynamic Metadata Function for Cart Page
 export async function generateMetadata() {
   try {
     const res = await fetch(
-      "https://ecommerce-inventory.thegallerygen.com/api/page/detail/5", // API page ID for Cart
+      `${API_BASE}/page/detail/5`, // API page ID for Cart
       { cache: "no-store" },
     );
 

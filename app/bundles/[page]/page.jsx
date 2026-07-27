@@ -1,4 +1,5 @@
 import { resolveCanonical, getCanonicalUrl } from "../../lib/getCanonicalUrl";
+import { API_BASE } from "../../../constants/constants";
 
 // Dynamic route for paginated bundles pages: /bundles/2, /bundles/3, etc.
 // Page 1 is served by /bundles/page.jsx (no page number in URL)
@@ -7,7 +8,7 @@ export async function generateMetadata({ params }) {
   const page = params.page;
   try {
     const res = await fetch(
-      "https://ecommerce-inventory.thegallerygen.com/api/page/detail/3",
+      `${API_BASE}/page/detail/3`,
       { next: { revalidate: 300 } }
     );
 

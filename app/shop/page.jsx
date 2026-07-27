@@ -2,6 +2,8 @@
 import { Suspense } from "react";
 import CustomHeroSection from "../src/components/CustomHeroSection";
 import ShopClient from "../src/Pages/ShopClient";
+import { resolveCanonical } from "../lib/getCanonicalUrl";
+import { API_BASE } from "../../constants/constants";
 // import ShopClient from "../src/Pages/ShopClient";
 
 export const revalidate = 300;
@@ -9,10 +11,9 @@ export const revalidate = 300;
 // ─── Shared data fetch (metadata + schema + products) ─────────────────────────
 async function getPageData() {
   try {
-    const res = await fetch(
-      "https://ecommerce-inventory.thegallerygen.com/api/page/detail/1",
-      { next: { revalidate: 300 } }
-    );
+    const res = await fetch(`${API_BASE}/page/detail/1`, {
+      next: { revalidate: 300 },
+    });
     if (!res.ok) return null;
     const json = await res.json();
     return json?.data || null;
@@ -24,7 +25,7 @@ async function getPageData() {
 async function fetchProducts() {
   try {
     const res = await fetch(
-      "https://ecommerce-inventory.thegallerygen.com/api/search/product?sort_by=1",
+      `${API_BASE}/search/product?sort_by=1`,
       { next: { revalidate: 300 } }
     );
     if (!res.ok) return [];
@@ -41,7 +42,7 @@ async function fetchProducts() {
 async function fetchCategories() {
   try {
     const res = await fetch(
-      "https://ecommerce-inventory.thegallerygen.com/api/product/category",
+      `${API_BASE}/product/category`,
       { next: { revalidate: 3600 } }
     );
     if (!res.ok) return [];
@@ -51,7 +52,6 @@ async function fetchCategories() {
     return [];
   }
 }
-import { resolveCanonical } from "../lib/getCanonicalUrl";
 
 export async function generateMetadata() {
   const pageData = await getPageData();

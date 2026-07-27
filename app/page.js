@@ -1,12 +1,12 @@
 // 🟩 Dynamic Metadata Function
 import { resolveCanonical, getCanonicalUrl } from "./lib/getCanonicalUrl";
+import { API_BASE } from "../constants/constants";
 
 export async function generateMetadata() {
   try {
-    const res = await fetch(
-      "https://ecommerce-inventory.thegallerygen.com/api/page/detail/7",
-      { next: { revalidate: 300 } },
-    );
+    const res = await fetch(`${API_BASE}/page/detail/7`, {
+      next: { revalidate: 300 },
+    });
 
     const data = await res.json();
     const canonical = resolveCanonical(data?.data?.canonical_url, "/");
@@ -42,8 +42,6 @@ export async function generateMetadata() {
 import Homes from "./src/Pages/Homes";
 
 export const revalidate = 300;
-
-const API_BASE = "https://ecommerce-inventory.thegallerygen.com/api";
 
 // Fetch page data including schema on the server
 async function getPageData() {
