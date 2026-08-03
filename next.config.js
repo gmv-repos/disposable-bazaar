@@ -26,7 +26,7 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "ecommerce-inventory.thegallerygen.com",
+        hostname: "dbapi.xstoreo.com",
         pathname: "/**",
       },
       {
