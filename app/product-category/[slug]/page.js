@@ -10,7 +10,8 @@ import { resolveCanonical } from "../../lib/getCanonicalUrl";
 import { fetchJson } from "../../lib/fetchWithTimeout";
 import { API_BASE } from "../../../constants/constants";
 
-// export const revalidate = 600;
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 const BLOCKED_SLUGS = new Set(["kraft-paper-rectangular-bowl"]);
 
@@ -33,7 +34,7 @@ function findCatBySlug(cats, targetSlug) {
 async function getPageData(slug) {
   try {
     const { data: catData } = await fetchJson(`${API_BASE}/product/category`, {
-      next: { revalidate: 600 },
+      cache: "no-store",
     });
 
     if (!catData?.data)
@@ -45,7 +46,7 @@ async function getPageData(slug) {
 
     const { data: prodData } = await fetchJson(
       `${API_BASE}/search/product?category_id=${cat.id}&sort_by=1`,
-      { next: { revalidate: 600 } },
+      { cache: "no-store" },
     );
 
     return {

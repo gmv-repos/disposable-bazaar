@@ -2,10 +2,13 @@
 import { resolveCanonical, getCanonicalUrl } from "../lib/getCanonicalUrl";
 import { API_BASE } from "../../constants/constants";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export async function generateMetadata() {
   try {
     const res = await fetch(`${API_BASE}/page/detail/3`, {
-      next: { revalidate: 600 },
+      cache: "no-store",
     });
 
     if (!res.ok) throw new Error(`API returned status ${res.status}`);
@@ -51,15 +54,13 @@ import { Suspense } from "react";
 import Customization from "../src/Pages/Customization ";
 import { fetchPageDetailById, serializeLdJson } from "../lib/seo/pageDetail";
 
-// export const revalidate = 600;
-
 async function getPageData() {
   try {
     const [productsRes, categoriesRes] = await Promise.all([
       fetch(`${API_BASE}/search/Customizeproduct?sort_by=1`, {
-        next: { revalidate: 600 },
+        cache: "no-store",
       }),
-      fetch(`${API_BASE}/product/category`, { next: { revalidate: 3600 } }),
+      fetch(`${API_BASE}/product/category`, { cache: "no-store" }),
     ]);
     const products = productsRes.ok ? await productsRes.json() : null;
     const categories = categoriesRes.ok ? await categoriesRes.json() : null;
@@ -75,7 +76,7 @@ async function getPageData() {
 export default async function Page() {
   const [{ products, categories }, pageDetail] = await Promise.all([
     getPageData(),
-    fetchPageDetailById(3, { next: { revalidate: 600 } }),
+    fetchPageDetailById(3, { cache: "no-store" }),
   ]);
   const schemaLd = serializeLdJson(pageDetail?.schema);
 

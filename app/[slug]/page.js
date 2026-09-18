@@ -8,7 +8,8 @@ import { resolveCanonical } from "../lib/getCanonicalUrl";
 import { fetchJson } from "../lib/fetchWithTimeout";
 import { API_BASE, API_Image_BASE } from "../../constants/constants";
 
-// export const revalidate = 600;
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 const SITE = "https://dispasible-bazar-persnal.vercel.app";
 
@@ -18,7 +19,7 @@ async function getBlogData(slug) {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ slug: `${slug}/` }),
-      next: { revalidate: 600 },
+      cache: "no-store",
     });
 
     if (!data || data.status !== "success") return null;
@@ -28,7 +29,7 @@ async function getBlogData(slug) {
     if (blogData?.blog && !blogData.blog.main_image) {
       try {
         const { data: listData } = await fetchJson(`${API_BASE}/blogs/index`, {
-          next: { revalidate: 600 },
+          cache: "no-store",
         });
         const match = listData?.data?.find?.(
           (b) => b.slug === `${slug}/` || b.slug === slug,

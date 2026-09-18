@@ -10,7 +10,7 @@ export { buildCanonical, validateCanonical, resolveCanonical, getCanonicalUrl };
 
 export async function fetchPageDetailById(
   id,
-  cacheOpts = { next: { revalidate: 3600 } },
+  cacheOpts = { cache: "no-store" },
 ) {
   try {
     const res = await fetch(`${API_BASE}/page/detail/${id}`, cacheOpts);
@@ -24,7 +24,7 @@ export async function fetchPageDetailById(
 
 export async function fetchPageDetailBySlug(
   slug,
-  cacheOpts = { next: { revalidate: 3600 } },
+  cacheOpts = { cache: "no-store" },
 ) {
   try {
     const q = slug.replace(/^\//, "").replace(/\/$/, "");

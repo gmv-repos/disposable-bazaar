@@ -8,7 +8,8 @@ import { resolveCanonical } from "../../../lib/getCanonicalUrl";
 import { fetchJson } from "../../../lib/fetchWithTimeout";
 import { API_BASE } from "../../../../constants/constants";
 
-// export const revalidate = 600;
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 const normalize = (s) =>
   decodeURIComponent(String(s || ""))
@@ -29,7 +30,7 @@ function findCatBySlug(cats, targetSlug) {
 async function getPageData(categorySlug) {
   try {
     const { data: catData } = await fetchJson(`${API_BASE}/product/category`, {
-      next: { revalidate: 600 },
+      cache: "no-store",
     });
     if (!catData?.data)
       return { cat: null, products: [], category: null, apiDown: true };
@@ -40,7 +41,7 @@ async function getPageData(categorySlug) {
 
     const { data: prodData } = await fetchJson(
       `${API_BASE}/search/product?category_id=${cat.id}&sort_by=1`,
-      { next: { revalidate: 600 } },
+      { cache: "no-store" },
     );
 
     return {

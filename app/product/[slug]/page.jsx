@@ -10,7 +10,8 @@ import { resolveProductCanonical } from "../../lib/getCanonicalUrl";
 import { fetchJson } from "../../lib/fetchWithTimeout";
 import { API_BASE, API_Image_BASE } from "../../../constants/constants";
 
-// export const revalidate = 600;
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 const SITE = "https://dispasible-bazar-persnal.vercel.app";
 
@@ -56,7 +57,7 @@ async function getProductData(slug) {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ slug: key }),
-      next: { revalidate: 600 },
+      cache: "no-store",
     }
   );
 
@@ -68,7 +69,7 @@ async function getProductReviews(productId) {
   if (!productId) return null;
   const { data } = await fetchJson(
     `${API_BASE}/product_reviews/${productId}/`,
-    { next: { revalidate: 60 } }
+    { cache: "no-store" }
   );
   return data?.status === "success" ? data : null;
 }

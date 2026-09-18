@@ -2,10 +2,13 @@
 import { resolveCanonical, getCanonicalUrl } from "./lib/getCanonicalUrl";
 import { API_BASE } from "../constants/constants";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export async function generateMetadata() {
   try {
     const res = await fetch(`${API_BASE}/page/detail/7`, {
-      next: { revalidate: 300 },
+      cache: "no-store",
     });
 
     const data = await res.json();
@@ -41,13 +44,11 @@ export async function generateMetadata() {
 
 import Homes from "./src/Pages/Homes";
 
-// export const revalidate = 300;
-
 // Fetch page data including schema on the server
 async function getPageData() {
   try {
     const res = await fetch(`${API_BASE}/page/detail/7`, {
-      next: { revalidate: 300 },
+      cache: "no-store",
     });
     if (!res.ok) return null;
     const data = await res.json();
@@ -62,7 +63,7 @@ async function getPlasticContainersProducts() {
   try {
     const res = await fetch(
       `${API_BASE}/search/product?category_id=28&sort_by=1`,
-      { next: { revalidate: 300 } },
+      { cache: "no-store" },
     );
     if (!res.ok) return [];
     const json = await res.json();

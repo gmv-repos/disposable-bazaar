@@ -11,6 +11,9 @@ import { getSiteBaseUrl } from "./lib/getCanonicalUrl";
 
 const siteOrigin = getSiteBaseUrl();
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export const metadata = {
   ...(siteOrigin ? { metadataBase: new URL(siteOrigin) } : {}),
   title: "Disposable Bazaar",

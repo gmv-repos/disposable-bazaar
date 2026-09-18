@@ -5,14 +5,15 @@ import ShopClient from "../../src/Pages/ShopClient";
 import { resolveCanonical } from "../../lib/getCanonicalUrl";
 import { API_BASE } from "../../../constants/constants";
 
-// export const revalidate = 300;
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 // ─── Shared data fetch ────────────────────────────────────────────────────────
 async function getPageData() {
   try {
     const res = await fetch(
       `${API_BASE}/page/detail/1`,
-      { next: { revalidate: 300 } }
+      { cache: "no-store" }
     );
     if (!res.ok) return null;
     const json = await res.json();
@@ -26,7 +27,7 @@ async function fetchProducts() {
   try {
     const res = await fetch(
       `${API_BASE}/search/product?sort_by=1`,
-      { next: { revalidate: 300 } }
+      { cache: "no-store" }
     );
     if (!res.ok) return [];
     const json = await res.json();
