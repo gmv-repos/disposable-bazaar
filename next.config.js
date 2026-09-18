@@ -26,6 +26,11 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: "https",
+        hostname: "dbapi.xstoreo.com",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
         hostname: "ecommerce-inventory.thegallerygen.com",
         pathname: "/**",
       },
@@ -46,20 +51,24 @@ const nextConfig = {
       {
         source: "/_next/static/(.*)",
         headers: [
-          { key: "Cache-Control", value: "public, max-age=31536000, immutable" },
+          {
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
+          },
         ],
       },
       {
         source: "/_next/image(.*)",
         headers: [
-          { key: "Cache-Control", value: "public, max-age=86400, stale-while-revalidate=604800" },
+          {
+            key: "Cache-Control",
+            value: "public, max-age=86400, stale-while-revalidate=604800",
+          },
         ],
       },
       {
         source: "/(.*)",
-        headers: [
-          { key: "X-Robots-Tag", value: "all" },
-        ],
+        headers: [{ key: "X-Robots-Tag", value: "all" }],
       },
     ];
   },

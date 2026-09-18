@@ -7,7 +7,7 @@ import { resolveBundleCanonical } from "../../lib/getCanonicalUrl";
 import { fetchJson } from "../../lib/fetchWithTimeout";
 import { API_BASE } from "../../../constants/constants";
 
-export const revalidate = 300;
+// export const revalidate = 300;
 
 async function getBundleData(slug) {
   try {

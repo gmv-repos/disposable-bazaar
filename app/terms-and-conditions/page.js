@@ -5,7 +5,7 @@ import {
   serializeLdJson,
 } from "../lib/seo/pageDetail";
 
-export const revalidate = 86400;
+// export const revalidate = 86400;
 
 export async function generateMetadata() {
   let detail = await fetchPageDetailBySlug("terms-and-conditions", {

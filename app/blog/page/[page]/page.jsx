@@ -8,7 +8,7 @@ import BlogClient from "../../../src/Pages/Blog";
 import { buildCanonical } from "../../../lib/seo/pageDetail";
 import { API_BASE } from "../../../../constants/constants";
 
-export const revalidate = 300;
+// export const revalidate = 300;
 
 async function getPageData(page = 1) {
   try {

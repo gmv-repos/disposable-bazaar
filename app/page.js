@@ -41,7 +41,7 @@ export async function generateMetadata() {
 
 import Homes from "./src/Pages/Homes";
 
-export const revalidate = 300;
+// export const revalidate = 300;
 
 // Fetch page data including schema on the server
 async function getPageData() {

@@ -6,7 +6,7 @@ import { resolveCanonical } from "../lib/getCanonicalUrl";
 import { API_BASE } from "../../constants/constants";
 // import ShopClient from "../src/Pages/ShopClient";
 
-export const revalidate = 300;
+// export const revalidate = 300;
 
 // ─── Shared data fetch (metadata + schema + products) ─────────────────────────
 async function getPageData() {

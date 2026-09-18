@@ -10,7 +10,7 @@ import { resolveCanonical } from "../../lib/getCanonicalUrl";
 import { fetchJson } from "../../lib/fetchWithTimeout";
 import { API_BASE } from "../../../constants/constants";
 
-export const revalidate = 600;
+// export const revalidate = 600;
 
 const BLOCKED_SLUGS = new Set(["kraft-paper-rectangular-bowl"]);
 

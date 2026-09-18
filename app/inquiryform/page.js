@@ -55,7 +55,7 @@ export async function generateMetadata() {
 import { Suspense } from "react";
 import InquiryFormClient from "../src/Pages/InquiryForm";
 
-export const revalidate = 3600;
+// export const revalidate = 3600;
 
 async function getProducts() {
   try {

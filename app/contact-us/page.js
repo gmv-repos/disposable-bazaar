@@ -48,7 +48,7 @@ export async function generateMetadata() {
 import React, { Suspense } from "react";
 import ContactUs from "../src/Pages/ContactUs";
 
-export const revalidate = 3600;
+// export const revalidate = 3600;
 export default function Page() {
   return (
     <Suspense fallback={<div>Loading...</div>}>

@@ -45,7 +45,7 @@ export async function generateMetadata() {
 import React, { Suspense } from "react";
 import Reviews from "../src/Pages/Reviews";
 
-export const revalidate = 3600;
+// export const revalidate = 3600;
 
 async function getReviewsData() {
   try {

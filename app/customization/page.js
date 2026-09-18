@@ -51,7 +51,7 @@ import { Suspense } from "react";
 import Customization from "../src/Pages/Customization ";
 import { fetchPageDetailById, serializeLdJson } from "../lib/seo/pageDetail";
 
-export const revalidate = 600;
+// export const revalidate = 600;
 
 async function getPageData() {
   try {

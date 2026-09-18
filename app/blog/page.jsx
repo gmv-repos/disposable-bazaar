@@ -5,7 +5,7 @@
 import { Suspense } from "react";
 import BlogClient from "../src/Pages/Blog";
 
-export const revalidate = 300;
+// export const revalidate = 300;
 
 // ─── Server fetch ─────────────────────────────────────────────────────────────
 async function getPageData() {

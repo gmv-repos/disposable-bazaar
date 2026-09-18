@@ -5,7 +5,7 @@ import ShopClient from "../../src/Pages/ShopClient";
 import { resolveCanonical } from "../../lib/getCanonicalUrl";
 import { API_BASE } from "../../../constants/constants";
 
-export const revalidate = 300;
+// export const revalidate = 300;
 
 // ─── Shared data fetch ────────────────────────────────────────────────────────
 async function getPageData() {

@@ -3,7 +3,7 @@ import PrivacyPolicy from "../src/Pages/PrivacyPolicy";
 import { resolveCanonical } from "../lib/getCanonicalUrl";
 import { API_BASE } from "../../constants/constants";
 
-export const revalidate = 86400;
+// export const revalidate = 86400;
 
 async function getPageDetail() {
   try {

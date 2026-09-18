@@ -43,7 +43,7 @@ export async function generateMetadata() {
 import { Suspense } from "react";
 import About from "../src/Pages/AboutUs";
 
-export const revalidate = 3600;
+// export const revalidate = 3600;
 
 export default function Page() {
   return (

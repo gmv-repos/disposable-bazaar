@@ -51,7 +51,7 @@ export async function generateMetadata({ params }) {
 import React, { Suspense } from "react";
 import BundleShop from "../../src/Pages/BundleShop";
 
-export const revalidate = 300;
+// export const revalidate = 300;
 
 export default function Page() {
   return (

@@ -7,7 +7,7 @@ import BundleShop from "../src/Pages/BundleShop";
 import { serializeLdJson } from "../lib/seo/pageDetail";
 import { API_BASE } from "../../constants/constants";
 
-export const revalidate = 300;
+// export const revalidate = 300;
 
 async function getPageData() {
   try {

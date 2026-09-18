@@ -3,7 +3,7 @@ import {
   metadataFromPageDetail,
 } from "../lib/seo/pageDetail";
 
-export const revalidate = 86400;
+// export const revalidate = 86400;
 
 export async function generateMetadata() {
   const detail = await fetchPageDetailById(7, {
