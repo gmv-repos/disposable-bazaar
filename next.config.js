@@ -47,25 +47,26 @@ const nextConfig = {
   },
 
   async headers() {
+    const isProd = process.env.NODE_ENV === "production";
     return [
-      {
-        source: "/_next/static/(.*)",
-        headers: [
-          {
-            key: "Cache-Control",
-            value: "public, max-age=31536000, immutable",
-          },
-        ],
-      },
-      {
-        source: "/_next/image(.*)",
-        headers: [
-          {
-            key: "Cache-Control",
-            value: "public, max-age=86400, stale-while-revalidate=604800",
-          },
-        ],
-      },
+      // Only in production: dev chunk filenames don't change when code changes,
+      // so an "immutable" header makes the browser keep running stale JS.
+      ...(isProd
+        ? [
+            {
+              source: "/_next/static/(.*)",
+              headers: [
+                {
+                  key: "Cache-Control",
+                  value: "public, max-age=31536000, immutable",
+                },
+              ],
+            },
+          ]
+        : []),
+      // No Cache-Control override for /_next/image: Next sets it itself
+      // (minimumCacheTTL above), and a forced header also cached failed
+      // 504 image responses in the browser for a day.
       {
         source: "/(.*)",
         headers: [{ key: "X-Robots-Tag", value: "all" }],

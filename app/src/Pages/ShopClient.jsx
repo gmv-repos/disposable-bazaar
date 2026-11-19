@@ -44,6 +44,33 @@ export default function ShopClient({ initialProducts = [], initialCategories = [
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [quantity, setQuantity] = useState(1);
   const [hoveredProductId, setHoveredProductId] = useState(null);
+  // Image load failures, tracked in state (never by mutating img.src in onError:
+  // next/image sets srcset, so changing src re-requests the failing srcset URL,
+  // which fires onError again → endless request loop).
+  // 1 = /_next/image optimizer failed (e.g. 504 from slow image host) → load original directly
+  // 2 = original failed too → show placeholder
+  const [imageFailures, setImageFailures] = useState({});
+
+  const getProductImage = (product) => {
+    const img =
+      hoveredProductId === product.id && product.product_image?.[1]
+        ? product.product_image[1]
+        : product.product_image?.[0];
+    const original = img?.image ? `${Assets_Url}${img.image}` : Image_Not_Found;
+    const level = imageFailures[original] || 0;
+    if (original === Image_Not_Found || level >= 2) {
+      return { key: original, src: Image_Not_Found, unoptimized: true };
+    }
+    return { key: original, src: original, unoptimized: level === 1 };
+  };
+
+  const markImageFailed = (key) => {
+    setImageFailures((prev) => {
+      const level = prev[key] || 0;
+      if (level >= 2) return prev; // already on placeholder — stop
+      return { ...prev, [key]: level + 1 };
+    });
+  };
 
   // Sync currentPage when URL changes
   useEffect(() => {
@@ -237,26 +264,24 @@ export default function ShopClient({ initialProducts = [], initialCategories = [
                 } gap-4`}>
                 {filteredProduct
                   .slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
-                  .map((product) => (
+                  .map((product) => {
+                    const img = getProductImage(product);
+                    return (
                     <div key={product.id} className="flex justify-center">
                       <div className="w-full xl:p-4 p-2 border border-[#1E7773] bg-gradient-to-l from-[#403E4A] to-[#32303E] rounded-2xl group flex flex-col">
                         <Link href={product.is_customizeable ? `/customization/${product.slug}` : `/product/${product.slug}`}>
                           <div className="relative p-5 flex justify-center items-center">
                             <Image
                               className="w-full rounded-xl h-[200px] object-cover transition-all duration-300"
-                              src={
-                                hoveredProductId === product.id && product.product_image?.[1]
-                                  ? `${Assets_Url}${product.product_image[1]?.image}`
-                                  : product.product_image?.[0]
-                                    ? `${Assets_Url}${product.product_image[0]?.image}`
-                                    : `${Image_Url}defaultImage.svg`
-                              }
+                              src={img.src}
                               alt={product.product_image?.[0]?.image_alt || product.name || "Product Image"}
                               width={500}
                               height={500}
+                              sizes="(max-width: 400px) 100vw, (max-width: 768px) 50vw, 25vw"
+                              unoptimized={img.unoptimized}
                               onMouseEnter={() => setHoveredProductId(product.id)}
                               onMouseLeave={() => setHoveredProductId(null)}
-                              onError={(e) => (e.currentTarget.src = Image_Not_Found)}
+                              onError={() => markImageFailed(img.key)}
                             />
                           </div>
                         </Link>
@@ -284,7 +309,8 @@ export default function ShopClient({ initialProducts = [], initialCategories = [
                         </div>
                       </div>
                     </div>
-                  ))}
+                    );
+                  })}
               </div>
 
               {totalPages > 1 && (

@@ -14,6 +14,7 @@ async function getPageData() {
   try {
     const res = await fetch(`${API_BASE}/page/detail/1`, {
       cache: "no-store",
+      signal: AbortSignal.timeout(8000),
     });
     if (!res.ok) return null;
     const json = await res.json();
@@ -27,7 +28,7 @@ async function fetchProducts() {
   try {
     const res = await fetch(
       `${API_BASE}/search/product?sort_by=1`,
-      { cache: "no-store" }
+      { cache: "no-store", signal: AbortSignal.timeout(15000) }
     );
     if (!res.ok) return [];
     const json = await res.json();
@@ -44,7 +45,7 @@ async function fetchCategories() {
   try {
     const res = await fetch(
       `${API_BASE}/product/category`,
-      { cache: "no-store" }
+      { cache: "no-store", signal: AbortSignal.timeout(15000) }
     );
     if (!res.ok) return [];
     const json = await res.json();
