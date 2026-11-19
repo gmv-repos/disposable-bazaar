@@ -17,6 +17,7 @@ import { FiX } from "react-icons/fi";
 import Link from "next/link";
 import DecodeTextEditor from "../../src/components/DecodeTextEditor";
 import Image from "next/image";
+import SafeImage from "../../src/components/SafeImage";
 
 // initialData is passed from the Server Component (SSR pre-fetch)
 export default function CategoryPageClient({ initialData }) {
@@ -394,11 +395,10 @@ export default function CategoryPageClient({ initialData }) {
       {Category && (
         <div className="flex flex-wrap justify-start gap-4 w-full p-5 items-start md:px-24">
           <div>
-            <Image
+            <SafeImage
               src={Category?.image ? `${Assets_Url}${Category.image}` : Image_Not_Found}
               alt={Category?.name || "Category Image"}
               className="w-96 h-96 object-contain rounded-lg"
-              onError={(e) => { e.currentTarget.src = Image_Not_Found; }}
               width={500}
               height={500}
             />

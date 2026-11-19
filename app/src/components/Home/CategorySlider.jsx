@@ -14,7 +14,7 @@ import { Assets_Url, Image_Not_Found, Image_Url } from '../../const';
 import AOS from "aos";
 import 'aos/dist/aos.css';
 import Link from 'next/link';
-import Image from 'next/image';
+import SafeImage from '../SafeImage';
 
 function CategorySlider({ products }) {
   
@@ -57,24 +57,22 @@ function CategorySlider({ products }) {
                             <div className='flex flex-col items-center justifycenter w-full h-full'>
                                 <Link href={data.is_customizeable ? `/customization/${data.slug}` : `/product/${data.slug}`}>
                                     <div className=" flex justify-center items-center w-[150px] h-[150px] md:w-[250px] md:h-[250px]">
-                                        <Image
+                                        <SafeImage
                                             className="w-full h-full block group-hover:hidden rounded-xl object-cover"
                                             src={data.product_image[0]?.image ? `${Assets_Url}${data.product_image[0].image}` : Image_Not_Found}
                                             alt={data.name}
                                             style={{ transition: 'opacity 0.5s ease 0.3s' }}
                                             loading='lazy'
-                                            onError={(e) => { e.currentTarget.src = Image_Not_Found; }}
                                             width={500}
                                             height={500}
                                         />
                                         {data.product_image[1]?.image && (
-                                            <Image
+                                            <SafeImage
                                                 className="w-full h-full hidden group-hover:block rounded-xl object-cover"
                                                 src={`${Assets_Url}${data.product_image[1].image}`}
                                                 alt={data.name}
                                                 style={{ transition: 'opacity 0.5s ease 0.3s' }}
                                                 loading='lazy'
-                                                onError={(e) => { e.currentTarget.src = Image_Not_Found; }}
                                                 width={500}
                                                 height={500}
                                             />

@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import Image from 'next/image';
+import SafeImage from '../components/SafeImage';
 import { useParams, useRouter } from "next/navigation";
 import CustomHeroSection from "../components/CustomHeroSection";
 import { Assets_Url, Image_Not_Found, Image_Url } from "../const";
@@ -155,15 +156,12 @@ function BundleShop() {
                       <div className={`flex ${grid === 2 && index % 2 === 0 ? "justify-end" : "justify-start"}`}>
                         <div className={`w-${grid === 2 ? "fit w-82 h-full" : "full"} xl:p-4 h76 p-2 flex flex-col border border-[#1E7773] bg-[#32303e] rounded-2xl group`}>
                           <div className="relative p-5 flex flex-col justify-center items-center max">
-                            <Image
+                            <SafeImage
                               className="w-full h-[243px] block rounded-xl object-cover"
-                              src={product.main_image ? `${Assets_Url}${product.main_image}` : `${Image_Url}defaultImage.svg`}
+                              src={product.main_image ? `${Assets_Url}${product.main_image}` : Image_Not_Found}
                               alt={product.name || "Product Image"}
                               style={{ transition: "opacity 0.5s ease 0.3s" }}
                               loading="lazy"
-                              onError={(e) => {
-                                e.currentTarget.src = Image_Not_Found;
-                              }}
                               width={500} height={500}
                             />
                           </div>

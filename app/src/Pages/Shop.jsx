@@ -14,7 +14,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import CartModal from "../components/cart/CartModal";
 import { FiX } from "react-icons/fi";
-import Image from "next/image";
+import SafeImage from "../components/SafeImage";
 
 function Shop() {
   const params = useParams();
@@ -306,7 +306,7 @@ function Shop() {
                               alt={product.product_image[0]?.image_alt || "Product Image"}
                               onError={(e) => (e.currentTarget.src = Image_Not_Found)}
                             /> */}
-                            <Image
+                            <SafeImage
                               className="w-full rounded-xl h-[200px] object-cover transition-all duration-300"
                               src={
                                 hoveredProductId === product.id && product.product_image?.[1]
@@ -320,7 +320,6 @@ function Shop() {
                               height={500}
                               onMouseEnter={() => setHoveredProductId(product.id)}
                               onMouseLeave={() => setHoveredProductId(null)}
-                              onError={(e) => (e.currentTarget.src = Image_Not_Found)}
                             />
 
 

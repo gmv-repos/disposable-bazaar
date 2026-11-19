@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from 'react'
-import Image from 'next/image';
+import SafeImage from '../SafeImage';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
 // Import Swiper styles
@@ -128,14 +128,10 @@ function Slider({ products, handleAddCart, cartLoader }) {
                                     onError={(e) => {
                                         e.currentTarget.src = Image_Not_Found; // Path to your dummy image
                                     }} /> */}
-                                <Image src={product.product_image[0]?.image === null ? `${Image_Url}defaultImage.svg` : `${Assets_Url}${product.product_image[0]?.image}`} alt="" className='block w-[350px] h-[350px] group-hover:hidden'
-                                    onError={(e) => {
-                                        e.currentTarget.src = Image_Not_Found; // Path to your dummy image
-                                    }} width={500} height={500} />
-                                <Image src={product.product_image[1]?.image === null ? `${Image_Url}defaultImage.svg` : `${Assets_Url}${product.product_image[1]?.image}`} alt="" className='hidden w-[350px] h-[350px] group-hover:block'
-                                    onError={(e) => {
-                                        e.currentTarget.src = Image_Not_Found; // Path to your dummy image
-                                    }} width={500} height={500} />
+                                <SafeImage src={product.product_image?.[0]?.image ? `${Assets_Url}${product.product_image[0].image}` : Image_Not_Found} alt={product.name || ""} className='block w-[350px] h-[350px] group-hover:hidden'
+                                    width={500} height={500} />
+                                <SafeImage src={product.product_image?.[1]?.image ? `${Assets_Url}${product.product_image[1].image}` : Image_Not_Found} alt={product.name || ""} className='hidden w-[350px] h-[350px] group-hover:block'
+                                    width={500} height={500} />
                             </Link>
                             <h2 className="font-bold  text-sm md:text-lg ">{product.name}</h2>
                             <h2 className="font-semibold text-sm md:text-lg">

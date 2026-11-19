@@ -7,6 +7,7 @@ import axios from '../../Utils/axios';
 import Link from 'next/link';
 import { Loader } from '../Loader';
 import Image from 'next/image';
+import SafeImage from '../SafeImage';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay } from 'swiper/modules';
 import 'swiper/css';
@@ -45,11 +46,10 @@ function Blogs() {
             className="flex flex-col gap-2 py-4 w-full justify-center items-start"
             aria-label={`Read ${data.title}`}
         >
-            <Image
+            <SafeImage
                 className="rounded-2xl w-full h-[200px] md:h-[380px] object-cover"
-                src={`${Assets_Url}${data.main_image}`}
+                src={data.main_image ? `${Assets_Url}${data.main_image}` : Image_Not_Found}
                 alt={data.title}
-                onError={(e) => { e.currentTarget.src = Image_Not_Found; }}
                 width={500}
                 height={500}
             />

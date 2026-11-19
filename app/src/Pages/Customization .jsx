@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import Image from 'next/image';
+import SafeImage from '../components/SafeImage';
 import CustomHeroSection from "../components/CustomHeroSection";
 import PriceRange from "../components/Shop/PriceRange";
 import { Assets_Url, Image_Not_Found, Image_Url } from "../const";
@@ -320,33 +321,27 @@ export default function Customization() {
                         >
                           <div className="w-full xl:p-4 p-2 flex flex-col border border-[#1E7773] bg-[#32303e] rounded-2xl group">
                             <div className="relative p-5 flex flex-col justify-center items-center">
-                              <Image
+                              <SafeImage
                                 className="w-full h-full block group-hover:hidden rounded-xl object-cover"
                                 src={
-                                  product.product_image
-                                    ? `${Assets_Url}${product.product_image[0]?.image}`
-                                    : `${Image_Url}defaultImage.svg`
+                                  product.product_image?.[0]?.image
+                                    ? `${Assets_Url}${product.product_image[0].image}`
+                                    : Image_Not_Found
                                 }
                                 alt={product.name || "Product Image"}
                                 loading="lazy"
-                                onError={(e) => {
-                                  e.currentTarget.src = Image_Not_Found;
-                                }}
                                 width={500} height={500}
                               />
 
-                              <Image
+                              <SafeImage
                                 className="w-full h-full hidden group-hover:block rounded-xl object-cover"
                                 src={
-                                  product.product_image
-                                    ? `${Assets_Url}${product.product_image[1]?.image}`
-                                    : `${Image_Url}defaultImage.svg`
+                                  product.product_image?.[1]?.image
+                                    ? `${Assets_Url}${product.product_image[1].image}`
+                                    : Image_Not_Found
                                 }
                                 alt={product.name || "Product Image"}
                                 loading="lazy"
-                                onError={(e) => {
-                                  e.currentTarget.src = Image_Not_Found;
-                                }}
                                 width={500} height={500}
                               />
                             </div>
