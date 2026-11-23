@@ -601,7 +601,7 @@ function ShopDetails({ initialData = null, initialReviews = null }) {
                                                             setSelectedImage(lid.image);
                                                         }}
                                                     />
-                                                    <label>{lid.name} Pcs</label>
+                                                    <label>{lid.name}</label>
                                                 </div>
                                             ))}
                                         </div>
