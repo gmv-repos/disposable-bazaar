@@ -51,12 +51,20 @@ export default function ShopClient({ initialProducts = [], initialCategories = [
   // 2 = original failed too → show placeholder
   const [imageFailures, setImageFailures] = useState({});
 
+  const getProductImagePath = (product, useHover = false) => {
+    if (product.product_image?.length > 0) {
+      const img =
+        useHover && hoveredProductId === product.id && product.product_image[1]
+          ? product.product_image[1]
+          : product.product_image[0];
+      if (img?.image) return img.image;
+    }
+    return product.image_path || "";
+  };
+
   const getProductImage = (product) => {
-    const img =
-      hoveredProductId === product.id && product.product_image?.[1]
-        ? product.product_image[1]
-        : product.product_image?.[0];
-    const original = img?.image ? `${Assets_Url}${img.image}` : Image_Not_Found;
+    const imgPath = getProductImagePath(product, true);
+    const original = imgPath ? `${Assets_Url}${imgPath}` : Image_Not_Found;
     const level = imageFailures[original] || 0;
     if (original === Image_Not_Found || level >= 2) {
       return { key: original, src: Image_Not_Found, unoptimized: true };
@@ -129,6 +137,8 @@ export default function ShopClient({ initialProducts = [], initialCategories = [
         },
       });
       let data = response.data?.data || [];
+      console.log(data, "PRODUCT");
+
       if (!Array.isArray(data) && data?.is_customizeable) {
         data = data.is_customizeable;
       }
@@ -199,7 +209,7 @@ export default function ShopClient({ initialProducts = [], initialCategories = [
     const product_total = (price_per_piece * total_pieces).toFixed(2);
     addToCart(
       product.id, product.name, product_quantity, pack_size, total_pieces,
-      price_per_piece, product.product_image?.[0]?.image ?? "",
+      price_per_piece, getProductImagePath(product),
       product_total, product.product_variants
     );
     setIsCartModalOpen(true);
@@ -267,48 +277,48 @@ export default function ShopClient({ initialProducts = [], initialCategories = [
                   .map((product) => {
                     const img = getProductImage(product);
                     return (
-                    <div key={product.id} className="flex justify-center">
-                      <div className="w-full xl:p-4 p-2 border border-[#1E7773] bg-gradient-to-l from-[#403E4A] to-[#32303E] rounded-2xl group flex flex-col">
-                        <Link href={product.is_customizeable ? `/customization/${product.slug}` : `/product/${product.slug}`}>
-                          <div className="relative p-5 flex justify-center items-center">
-                            <Image
-                              className="w-full rounded-xl h-[200px] object-cover transition-all duration-300"
-                              src={img.src}
-                              alt={product.product_image?.[0]?.image_alt || product.name || "Product Image"}
-                              width={500}
-                              height={500}
-                              sizes="(max-width: 400px) 100vw, (max-width: 768px) 50vw, 25vw"
-                              unoptimized={img.unoptimized}
-                              onMouseEnter={() => setHoveredProductId(product.id)}
-                              onMouseLeave={() => setHoveredProductId(null)}
-                              onError={() => markImageFailed(img.key)}
-                            />
-                          </div>
-                        </Link>
-                        {/* Fixed height name — 2 lines max, all cards same height */}
-                        <h4 className="font-semibold xl:text-lg h-[3.5rem] line-clamp-2 overflow-hidden">{product.name}</h4>
-                        <p className="text-md py-3 font-semibold">
-                          {product.product_variants?.length > 0 ? (
-                            <>Rs {product.product_variants[0].price} - Rs {product.product_variants[product.product_variants.length - 1].price}</>
-                          ) : <span>No variants</span>}
-                        </p>
-                        {/* mt-auto pushes buttons to bottom of card always */}
-                        <div className="flex xl:flex-row lg:flex-col justify-center xl:gap-4 gap-1 mt-auto pt-2">
-                          <button
-                            className="p-2 bg-[#1E7773] w-full text-[13px] cursor-pointer font-bazaar rounded-lg"
-                            onClick={() => handleAddCartClick(product)}
-                          >
-                            ADD TO CART
-                          </button>
-                          <Link
-                            className="p-2 border border-[#1E7773] text-center w-full font-bazaar rounded-lg"
-                            href={product.is_customizeable ? `/customization/${product.slug}` : `/product/${product.slug}`}
-                          >
-                            BUY NOW
+                      <div key={product.id} className="flex justify-center">
+                        <div className="w-full xl:p-4 p-2 border border-[#1E7773] bg-gradient-to-l from-[#403E4A] to-[#32303E] rounded-2xl group flex flex-col">
+                          <Link href={product.is_customizeable ? `/customization/${product.slug}` : `/product/${product.slug}`}>
+                            <div className="relative p-5 flex justify-center items-center">
+                              <Image
+                                className="w-full rounded-xl h-[200px] object-cover transition-all duration-300"
+                                src={img.src}
+                                alt={product.product_image?.[0]?.image_alt || product.name || "Product Image"}
+                                width={500}
+                                height={500}
+                                sizes="(max-width: 400px) 100vw, (max-width: 768px) 50vw, 25vw"
+                                unoptimized={img.unoptimized}
+                                onMouseEnter={() => setHoveredProductId(product.id)}
+                                onMouseLeave={() => setHoveredProductId(null)}
+                                onError={() => markImageFailed(img.key)}
+                              />
+                            </div>
                           </Link>
+                          {/* Fixed height name — 2 lines max, all cards same height */}
+                          <h4 className="font-semibold xl:text-lg h-[3.5rem] line-clamp-2 overflow-hidden">{product.name}</h4>
+                          <p className="text-md py-3 font-semibold">
+                            {product.product_variants?.length > 0 ? (
+                              <>Rs {product.product_variants[0].price} - Rs {product.product_variants[product.product_variants.length - 1].price}</>
+                            ) : <span>No variants</span>}
+                          </p>
+                          {/* mt-auto pushes buttons to bottom of card always */}
+                          <div className="flex xl:flex-row lg:flex-col justify-center xl:gap-4 gap-1 mt-auto pt-2">
+                            <button
+                              className="p-2 bg-[#1E7773] w-full text-[13px] cursor-pointer font-bazaar rounded-lg"
+                              onClick={() => handleAddCartClick(product)}
+                            >
+                              ADD TO CART
+                            </button>
+                            <Link
+                              className="p-2 border border-[#1E7773] text-center w-full font-bazaar rounded-lg"
+                              href={product.is_customizeable ? `/customization/${product.slug}` : `/product/${product.slug}`}
+                            >
+                              BUY NOW
+                            </Link>
+                          </div>
                         </div>
                       </div>
-                    </div>
                     );
                   })}
               </div>
